@@ -17,23 +17,35 @@ function readURLFromTA() {
 *@desc add and load the read GeoJSON/URL on the map
 */
 function loadGeoJSON() {
-    var feat = readGeoJSONFromTA();
-    var gLayer = L.geoJson(feat);
-    gLayer.addTo(map);
+    try {
+        var feat = readGeoJSONFromTA();
+        geoJSOndrawn = L.geoJson(feat);
+    }
+    catch {
+        alert("Bidde korrektes JSON");
+    }
 }
 function loadURL() {
     var feat = readURLFromTA();
-    var gLayer = L.geoJson(feat);
-    gLayer.addTo(map);
+    currentGeojson += L.geoJson(feat);
+    drawnItems.addTo(map);
 }
 
 /**
 * @desc Deletes the layer 
 * source: https://bl.ocks.org/danswick/d30c44b081be31aea483
 */
-function deleteLayer() {
-    drawnItems.clearLayers();
-}
+$('#delete').click(function() {
+    try {
+        drawnItems.clearLayers();
+        alert("Allet geloescht");
+        $('#delete').prop('disabled', true);
+        $('#download').prop('disabled', true);
+    }
+    catch {
+        alert("Nix zu loeschn");
+    }
+})
 
 /**
 * represent a file in the database
@@ -58,12 +70,12 @@ function saveToDatabase() {
     var pictureURL = document.getElementById('PicURL').value;
     
     if(textfield.length==0) {
-        alert("Error: Please fill in a name");
+        alert("Error: Bidde gib ein Name");
     }   else {
         var data = drawnItems.toGeoJSON();
         var dbObject = new databaseobject(textfield, "",pictureURL);
         dbObject.json = JSON.stringify(data);
-        alert("Object successfull saved!");
+        alert("Objekt erfolgreich gespeichert!");
         $.ajax({
             type: 'POST',
             data: dbObject,

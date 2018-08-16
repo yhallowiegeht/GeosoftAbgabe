@@ -1,13 +1,12 @@
 'use strict';
-
 /**
  * @file This script sets up the Leaflet map
  */
+var geoJSONDrawn = "";
 
 /* 
- * Setting up the three base layers.
+ * Setting up the two base layers.
  */
-var geoJSONDrawn = "";
 var mapboxURL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}';
 var token = 'pk.eyJ1IjoiaG9lbHNjaCIsImEiOiJxblpwakZrIn0.JTTnLszkIJB11k8YEe7raQ';
 var map = L.map('map').setView([51.963621,7.615891], 13); // the map with the start Coordinats
@@ -17,29 +16,12 @@ var streets = L.tileLayer(mapboxURL, {
         id: 'mapbox.streets',
         accessToken: token
     }).addTo(map),
-    outdoors = L.tileLayer(mapboxURL, {
-        attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/feedback/' target='_blank'>Improve this map</a></strong>",
-        maxZoom: 18,
-        id: 'mapbox.outdoors',
-        accessToken: token
-    }),
     satellite = L.tileLayer(mapboxURL, {
         attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/feedback/' target='_blank'>Improve this map</a></strong>",
         maxZoom: 18,
         id: 'mapbox.satellite',
         accessToken: token
     });
-
-/* 
- * Add the basemaps to the layercontrol.
- */
-var baseMaps = {
-    "Streets": streets,
-    "Outdoors": outdoors,
-    "Satellite": satellite
-};
-var overlayMaps = [];
-var lcontrol = L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 /*
  * Add fullscreen control.
@@ -80,6 +62,19 @@ map.on('draw:created', function(e) {
       geoJSONDrawn = [currentGeojson];
     }
 
+    $('button#delete').attr("disabled", false);
     $('button#download').attr("disabled", false);
     drawnItems.addLayer(layer);
 });
+
+/* 
+ * Add the basemaps and overlays to the layercontrol.
+ */
+var baseMaps = {
+    "Strassen": streets,
+    "Satellit": satellite
+};
+var overlayMaps = {
+    "Gezeichnete Sachen": drawnItems
+} 
+var lcontrol = L.control.layers(baseMaps, overlayMaps).addTo(map);

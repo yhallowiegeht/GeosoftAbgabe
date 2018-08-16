@@ -4,46 +4,56 @@ block content
   .container-fluid.fill-height
     .row.toolbar
       .col-xs-12.col-sm-8.small
-        .btn-group.btn-group-xs(role='group', aria-label='...')
-          button#download.btn.btn-success.btn-xs(type='button', aria-hidden='true', onclick='saveToDatabase()', disabled='disabled')
-            span.glyphicon.glyphicon-save(aria-hidden='true')
-            span  In Datenbank speichern
-          button#delete.btn.btn-success.btn-xs(type='button', aria-hidden='true', onclick='deleteLayer()', disabled='disabled')
-            span.glyphicon.glyphicon-remove-circle(aria-hidden='true')
-            span  Loesche GeoJSON-Schicht
+        button#delete.btn.btn-success.btn-xs(type='button', disabled='disabled')
+          span.glyphicon.glyphicon-remove-circle()
+          span  Entferne GeoJSON-Schicht
     .row
-      #resizable.col-xs-12.col-sm-9
-        .panel.panel-success
-          .panel-heading
+      #resizable.col-xs-12.col-sm-8
+        panel
+          .panel-heading.panel-default
             h3.panel-title Karte
           .panel-body
             #map
-      #mirror.col-xs-12.col-sm-3
-        .panel.panel-success
-          .panel-heading
+      #mirror.col-xs-12.col-sm-4
+        panel
+          .panel-heading.panel-default
             h3.panel-title Neues Institut hinzufuegen
           .panel-body
             .form-group  
-              label(for='GeoJSONname') Institutsname
+              label.badge(for='GeoJSONname') Institutsname
               textarea#GeoJSONname.form-control(rows='1', placeholder='Hier Name einfuegen')
-            .form-group
-              label(for='geojson-area') GeoJSON
-              textarea#geojson-area.form-control(rows='4', placeholder='Hier Text einfuegen')
+            #accordion
+              .card
+                .card-header
+                  a.card.badge(data-toggle='collapse', href='#collapseOne')
+                    | GeoJSON
+                #collapseOne.collapse.show(data-parent='#accordion')
+                  .card-body
+                    .form-group
+                    textarea#geojson-area.form-control(rows='4', placeholder='Hier Text einfuegen')
+                    br
+                    button.btn.btn-success(onclick='loadGeoJSON()')
+                      span
+                      |  Zeige auf Karte
               br
-              button.btn.btn-success(onclick='loadGeoJSON()')
-                span
-                |  Zeige auf Karte
-            .form-group
-              label(for='url-area') URL
-              textarea#url-area.form-control(rows='1', placeholder='Hier URL einfuegen')
+              .card
+                .card-header
+                  a.collapsed.badge(data-toggle='collapse', href='#collapseTwo')
+                    | URL
+                #collapseTwo.collapse(data-parent='#accordion')
+                  .card-body
+                    .form-group
+                    textarea#url-area.form-control(rows='1', placeholder='Hier URL einfuegen')
+                    br
+                    button.btn.btn-success(onclick='loadURL()')
+                      span
+                      |  Zeige auf Karte
               br
-              button.btn.btn-success(onclick='loadURL()')
-                span
-                |  Zeige auf Karte
-            .form-group
-              label(for='PicURL') Bild aus URL hinzufuegen
-              textarea#PicURL.form-control(rows='1', placeholder='Hier URL einfuegen')     
+            .form-group 
+              button#download.btn.btn-success.btn(type='button', onclick='saveToDatabase()', disabled='disabled')
+                span.glyphicon.glyphicon-save()
+                span  In Datenbank speichern     
   // /.container
+  script(src='javascripts/resize.js')
   script(src='javascripts/map.js')
   script(src='javascripts/map_functions.js')
-  script(src='javascripts/resize.js')

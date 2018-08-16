@@ -1,7 +1,7 @@
 
 html, body {
     height: 100%;
-    background: black;
+    background: #4cae4c;
 }
 
 .fill-height {
@@ -9,7 +9,7 @@ html, body {
     min-height: 100%;
     height: auto !important; /* cross-browser */
     height: 100%; /* cross-browser */
-    background: black;
+    background: #777;
 }
 
 body {
