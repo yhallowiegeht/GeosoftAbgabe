@@ -146,6 +146,19 @@ function coordinateMean(GeoJSON){
     return LATLONmean;
 }
 
+var ID = [];
+function getMensaID() {
+    var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&near[dist]=25' 
+    fetch(url)
+    .then(response => response.json())
+    .then(json => {
+        for(var i=0; i<json.length; i++){
+            ID += json[i].id;
+        }
+    })
+}
+
+
 function getMensas() {
     var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&near[dist]=25' 
     fetch(url)
