@@ -1,5 +1,5 @@
 'use strict';
-var gerichte = [];
+
 /**
 * @desc Reads the geojson/URL
 */
@@ -152,14 +152,11 @@ function getMensas() {
     .then(response => response.json())
     .then(json => {
         for(var i=0; i<json.length; i++){
-            mensaID[i] = json[i].id;
-            getMotD(json[i].id); 
+            var gericht = getMotD(json[i].id); 
             L.marker([json[i].coordinates[0], json[i].coordinates[1]]).addTo(map)
-                .bindPopup("<h5>"+json[i].name+"<h5><p>Adresse:<br>"+json[i].address+"</p><br>+");
+                .bindPopup("<h5>"+json[i].name+"<h5><p>Adresse:<br>"+json[i].address+"</p><br>"+gericht+"<br>");
         }
     })
-    console.log(mensaID);
-    
 }
 
 function getMotD(ID) {
@@ -174,13 +171,17 @@ function getMotD(ID) {
     var day = date.getDate().toString();
     var linkDate = year+"-"+month+"-"+day;
     var url = "http://openmensa.org/api/v2/canteens/"+ID+"/days/"+linkDate+"/meals"
+    var gerichte = "";
     fetch(url)
     .then(response => response.json())
     .then(json => {
-        for(var i=0; json.length; i++){
+        for(var i=0; i<json.length; i++){
             gerichte += json[i].name;
         }
+        console.log(gerichte);
+        return gerichte;
     })
+    
 }
 
 $( document ).ready(function()
