@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 /* GET map page. */
 router.get('/map', function(req, res, next) {
-  res.render('map', { title: 'Geosoftware I - Endabgabe - Karte' });
+  res.render('map', { title: 'Geosoftware I - Endabgabe - Lageplan' });
 });
 
 /* GET impressum page. */
@@ -19,7 +19,7 @@ router.get('/impressum', function(req, res, next) {
 /* GET Jsonlist page that contains all ojects of our database. */
 router.get('/jsonlist', function(req, res) {
   var db = req.db;
-  var collection = db.get('geojsons');
+  var collection = db.get('institutes');
   collection.find({},{},function(e,docs){
       res.render('jsonlist', {
           "jsonlist" : docs, title: 'Database Objects'
@@ -34,9 +34,9 @@ router.get('/jsonlist', function(req, res) {
 */
 router.get('/:id', function(req, res) {
   var db = req.db;
-  var collection = db.get('geojsons');
+  var collection = db.get('institutes');
   var db = req.db;
-  var collection = db.get('geojsons');
+  var collection = db.get('institutes');
   var json;
   collection.find({"_id": req.params.id},{},function(e,docs){
       // text is the json-string
@@ -48,12 +48,12 @@ router.get('/:id', function(req, res) {
 
 /*
 * handling database insert post request when clicking button in map
-* sending the data of the request to the database collection 'geojsons'
+* sending the data of the request to the database collection 'institutes'
 */
 router.post('/start', function(req, res) {
   var db = req.db;
   var document = req.body;
-  db.collection('geojsons').insert(document, function(err, result) {
+  db.collection('institutes').insert(document, function(err, result) {
     if(err) {
 
     } else {

@@ -11,13 +11,13 @@ block content
       #resizable.col-xs-12.col-sm-8
         panel
           .panel-heading.panel-default
-            h3.panel-title Karte
+            h2.panel-title Karte
           .panel-body
             #map
       #mirror.col-xs-12.col-sm-4
         panel
           .panel-heading.panel-default
-            h3.panel-title Neues Institut hinzufuegen
+            h2.panel-title Neues Institut hinzufuegen
           .panel-body
             .form-group  
               label.badge(for='GeoJSONname') Institutsname
@@ -32,7 +32,7 @@ block content
                     .form-group
                     textarea#geojson-area.form-control(rows='4', placeholder='Hier Text einfuegen')
                     br
-                    button.btn.btn-success(onclick='loadGeoJSON()')
+                    button.btn.btn-success.btn-xs(onclick='loadGeoJSON()')
                       span
                       |  Zeige auf Karte
               br
@@ -45,14 +45,34 @@ block content
                     .form-group
                     textarea#url-area.form-control(rows='1', placeholder='Hier URL einfuegen')
                     br
-                    button.btn.btn-success(onclick='loadURL()')
+                    button.btn.btn-success.btn-xs(onclick='loadURL()')
                       span
                       |  Zeige auf Karte
               br
             .form-group 
               button#download.btn.btn-success.btn(type='button', onclick='saveToDatabase()', disabled='disabled')
                 span.glyphicon.glyphicon-save()
-                span  In Datenbank speichern     
+                span  In Datenbank speichern
+        panel
+          .panel-heading.panel-default
+            h2.panel-title Neue Fachschaft hinzufuegen
+          .panel-body
+            .form-group
+              label.badge(for='FSname') Name
+              textarea#FSname.form-control(rows='1', placeholder='Hier Name einfuegen')
+              br
+              label.badge(for='abk') Abkuerzung
+              textarea#abk.form-control(rows='1', placeholder='Hier Abk einfuegen')
+              br
+              label.badge(for='FSurl-area') Webseite
+              textarea#FSurl-area.form-control(rows='1', placeholder='Hier URL einfuegen')
+              br
+              label.badge(for='institute') Institute
+              textarea#institute.form-control(rows='1', placeholder='Hier Institute einfuegen')
+              br
+              button#download.btn.btn-success.btn(type='button', onclick='saveToDatabase()', disabled='disabled')
+                span.glyphicon.glyphicon-save()
+                span  In Datenbank speichern          
   // /.container
   script(src='javascripts/resize.js')
   script(src='javascripts/map.js')

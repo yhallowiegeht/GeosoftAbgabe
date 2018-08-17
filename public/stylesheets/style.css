@@ -1,7 +1,7 @@
 
 html, body {
     height: 100%;
-    background: #4cae4c;
+    background: #777;
 }
 
 .fill-height {
@@ -9,7 +9,7 @@ html, body {
     min-height: 100%;
     height: auto !important; /* cross-browser */
     height: 100%; /* cross-browser */
-    background: #777;
+    background: rgb(58, 56, 56);
 }
 
 body {
@@ -17,7 +17,7 @@ body {
 }
 
 #resizable {
-    height: 40rem;
+    height: 75rem;
     border-right: 3px solid #4cae4c;
     min-width: 36rem !important;
 }
@@ -27,7 +27,7 @@ body {
 }
 
 #map {
-    height: 33.6rem;
+    height: 70rem;
     margin-top: 1rem;
     background-color: #dddddd;
 }
@@ -39,4 +39,9 @@ div.toolbar {
 
 div.toolbar p {
     margin-bottom: 0px;
+}
+
+.panel-title {
+    color: rgb(255, 255, 255);
+    font-size: 3rem;
 }
