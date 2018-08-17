@@ -1,5 +1,5 @@
 'use strict';
-
+var gerichte = [];
 /**
 * @desc Reads the geojson/URL
 */
@@ -9,9 +9,11 @@ function readGeoJSONFromTA() {
 
 function readURLFromTA() {
     var url = document.getElementById('url-area').value;
-    $.getJSON(url, function(data) {
-    return text(data.result);
-    });
+    fetch(url)
+    .then(response => response.json())
+    .then(json => {
+        JASON = json;
+    })
 }
 /**
 *@desc add and load the read GeoJSON/URL on the map
@@ -27,6 +29,7 @@ function loadGeoJSON() {
         laylay.addTo(map);
         maymay.addTo(map).bindPopup("<h5>"+iname+"<h5><img src="+bild+" width='200'><br>").openPopup();
         drawnItems.addLayer(laylay);
+        drawnItems.addLayer(maymay);
         $('#delete').prop('disabled', false);
         $('#download').prop('disabled', false);    
     }
@@ -35,17 +38,30 @@ function loadGeoJSON() {
     }
 }
 function loadURL() {
-    try {
-        var feat = readURLFromTA();
-        var laylay = L.geoJson(feat);
-        laylay.addTo(map);
-        drawnItems.addLayer(laylay);
-        $('#delete').prop('disabled', false);
-        $('#download').prop('disabled', false); 
-    }
-    catch {
-        alert("Bidde korrekten Link");
-    }
+        var feat;
+        var url = document.getElementById('url-area').value;
+        fetch(url)
+        .then(response => response.json())
+        .then(json => {
+            feat = json;
+            var bild = feat.features[0].properties.img;
+            var iname = feat.features[0].properties.name;
+            var laylay = L.geoJson(feat);
+            var LATLON = coordinateMean(feat);
+            var maymay = L.marker([LATLON.LATmean, LATLON.LONmean]);
+        try {    
+            laylay.addTo(map);
+            maymay.addTo(map).bindPopup("<h5>"+iname+"<h5><img src="+bild+" width='200'><br>").openPopup();
+            drawnItems.addLayer(laylay);
+            drawnItems.addLayer(maymay);
+            $('#delete').prop('disabled', false);
+            $('#download').prop('disabled', false); 
+        }
+        catch {
+            alert("Bidde korrekten Link");
+        }
+        })
+
 }
 
 /**
@@ -89,11 +105,16 @@ function saveToDatabase() {
         var data = drawnItems.toGeoJSON();
         var dbObject = new databaseobject(textfield, "");
         dbObject.json = JSON.stringify(data);
-        alert("Objekt erfolgreich gespeichert!");
         $.ajax({
             type: 'POST',
             data: dbObject,
             url: "./start",
+            success: function(result){
+                $('#error').html("gpseochert");
+            },
+            error: function(xhr,status,error){
+                $('#error').html("upsi deees");
+            }
         });
     }
 }
@@ -115,12 +136,54 @@ function coordinateMean(GeoJSON){
     }
     var LATmean = 0;
     var LONmean = 0;
-    for(var j=0; j<coordinatesLAT.length; j++) {
+    for(var j=0; j<(coordinatesLAT.length-1); j++) {
         LATmean += parseFloat(coordinatesLAT[j]);
         LONmean += parseFloat(coordinatesLON[j]);
     }
-    LATmean = LATmean / coordinatesLAT.length;
-    LONmean = LONmean / coordinatesLON.length;
+    LATmean = LATmean / (coordinatesLAT.length-1);
+    LONmean = LONmean / (coordinatesLON.length-1);
     var LATLONmean = {LATmean, LONmean};
     return LATLONmean;
 }
+
+function getMensas() {
+    var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&near[dist]=25' 
+    fetch(url)
+    .then(response => response.json())
+    .then(json => {
+        for(var i=0; i<json.length; i++){
+            mensaID[i] = json[i].id;
+            getMotD(json[i].id); 
+            L.marker([json[i].coordinates[0], json[i].coordinates[1]]).addTo(map)
+                .bindPopup("<h5>"+json[i].name+"<h5><p>Adresse:<br>"+json[i].address+"</p><br>+");
+        }
+    })
+    console.log(mensaID);
+    
+}
+
+function getMotD(ID) {
+    var date = new Date();
+    date.setHours(date.getHours() + 2);
+    var year = date.getFullYear().toString();
+    if (date.getMonth() < 9){
+        var month = "0"+(date.getMonth()+1).toString();
+    } else {
+        var month = (date.getMonth()+1).toString();
+    }
+    var day = date.getDate().toString();
+    var linkDate = year+"-"+month+"-"+day;
+    var url = "http://openmensa.org/api/v2/canteens/"+ID+"/days/"+linkDate+"/meals"
+    fetch(url)
+    .then(response => response.json())
+    .then(json => {
+        for(var i=0; json.length; i++){
+            gerichte += json[i].name;
+        }
+    })
+}
+
+$( document ).ready(function()
+{
+    getMensas();
+})
