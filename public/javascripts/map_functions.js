@@ -146,33 +146,10 @@ function coordinateMean(GeoJSON){
     return LATLONmean;
 }
 
-var ID = [];
-function getMensaID() {
-    var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&near[dist]=25' 
-    fetch(url)
-    .then(response => response.json())
-    .then(json => {
-        for(var i=0; i<json.length; i++){
-            ID += json[i].id;
-        }
-    })
-}
-
-
 function getMensas() {
-    var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&near[dist]=25' 
-    fetch(url)
-    .then(response => response.json())
-    .then(json => {
-        for(var i=0; i<json.length; i++){
-            var gericht = getMotD(json[i].id); 
-            L.marker([json[i].coordinates[0], json[i].coordinates[1]]).addTo(map)
-                .bindPopup("<h5>"+json[i].name+"<h5><p>Adresse:<br>"+json[i].address+"</p><br>"+gericht+"<br>");
-        }
-    })
-}
-
-function getMotD(ID) {
+    var open = "<sup style='font-size:6px; letter-spacing:3px; color: #4EAF47;' id='open'>GEO<span id='offset'>EFF</span>NET</sup><br>"
+    var closed = "<sup style='font-size:6px; letter-spacing:3px; color: #e51010' id='open'>GESC<span id='offset'>HLOS</span>SEN</sup></div>"
+    var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&nebrar[dist]=25' 
     var date = new Date();
     date.setHours(date.getHours() + 2);
     var year = date.getFullYear().toString();
@@ -183,18 +160,32 @@ function getMotD(ID) {
     }
     var day = date.getDate().toString();
     var linkDate = year+"-"+month+"-"+day;
-    var url = "http://openmensa.org/api/v2/canteens/"+ID+"/days/"+linkDate+"/meals"
-    var gerichte = "";
+    var alleMensen
     fetch(url)
     .then(response => response.json())
     .then(json => {
-        for(var i=0; i<json.length; i++){
-            gerichte += json[i].name;
-        }
-        console.log(gerichte);
-        return gerichte;
+        alleMensen = json
+        alleMensen.map((mensa)=>{
+            var url2 = "http://openmensa.org/api/v2/canteens/"+mensa.id+"/days/"+linkDate+"/meals"
+            fetch(url2)
+            .then((response)=>{
+                if (response.ok) {
+                    return response.json() 
+                } else {
+                    L.marker([mensa.coordinates[0], mensa.coordinates[1]], {icon: redIcon}).addTo(map)
+                        .bindPopup("<h4>"+mensa.name+"  "+closed+"</h4><p><em>"+mensa.address+"</em></p>")
+                }
+            })
+            .then((json)=>{
+                var gerichte=""
+                json.map((gericht)=>{
+                    gerichte+="<ins>"+gericht.category+"</ins>: "+gericht.name+" [Studenten: "+gericht.prices.students+"€, Mitarbeiter: "+gericht.prices.employees+"€, Andere: "+gericht.prices.others+"€]<br><br>"
+                })
+                L.marker([mensa.coordinates[0], mensa.coordinates[1]], {icon: greenIcon}).addTo(map)
+                    .bindPopup("<h4>"+mensa.name+"  "+open+"</h4><em>"+mensa.address+"</em><br><h5>Tagesgerichte:</h5>"+gerichte);
+            })
+        })
     })
-    
 }
 
 $( document ).ready(function()
