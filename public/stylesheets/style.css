@@ -17,7 +17,7 @@ body {
 }
 
 #resizable {
-    height: 75rem;
+    height: 60rem;
     border-right: 3px solid #4EAF47;
     min-width: 36rem !important;
 }
@@ -27,7 +27,7 @@ body {
 }
 
 #map {
-    height: 70rem;
+    height: 50rem;
     margin-top: 1rem;
     background-color: #dddddd;
 }

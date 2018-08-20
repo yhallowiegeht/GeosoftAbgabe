@@ -83,7 +83,7 @@ $('#delete').click(function() {
 /**
 * represent a file in the database
 */
-class databaseobject {
+class institute {
     /**
     * @param{string} name - name of the figures
     * @param{string:json} - boundries of the figures
@@ -91,6 +91,22 @@ class databaseobject {
     constructor(name, json) {
       this.name = name;
       this.json = json;
+    }
+}
+
+/**
+* represent a file in the database
+*/
+class fachschaft {
+    /**
+    * @param{string} name - name of the figures
+    * @param{string:json} - boundries of the figures
+    */
+    constructor(name, short, site, institutes) {
+      this.name = name;
+      this.short = short;
+      this.site = site;
+      this.institutes = institutes;
     }
 }
   
@@ -103,19 +119,52 @@ function saveToDatabase() {
         alert("Error: Bidde gib ein Name");
     }   else {
         var data = drawnItems.toGeoJSON();
-        var dbObject = new databaseobject(textfield, "");
+        var dbObject = new institute(textfield, "");
         dbObject.json = JSON.stringify(data);
         $.ajax({
             type: 'POST',
             data: dbObject,
             url: "./start",
             success: function(result){
-                $('#error').html("gpseochert");
+                alert("erfolgreich gespeichert!");
             },
             error: function(xhr,status,error){
-                $('#error').html("upsi deees");
+                alert("upsi deees");
             }
         });
+    }
+}
+
+/**
+ * @desc makes an AJAX post request with the data to later store it in the database
+ */
+function saveToDatabase2() {
+    var name = document.getElementById('FSname').value;     
+    if(name.length==0) {
+        alert("Error: Bidde gib ein vernünftige Name");
+    }   else {
+        var short = document.getElementById('abk').value;
+        if(short.length!=3) {
+            alert("Error: Bidde gib eine Abk");
+        }   else {
+            var site = document.getElementById('FSurl-area').value;
+            if(short.length==0) {
+                alert("Error: Bidde gib eine URL");
+            }   else {
+                var dbObject = new fachschaft(name, short, site, "");
+                $.ajax({
+                    type: 'POST',
+                    data: dbObject,
+                    url: "./start",
+                    success: function(result){
+                        alert("erfolgreich gespeichert!");
+                    },
+                    error: function(xhr,status,error){
+                        alert("upsi deees!");
+                    }
+                });
+            }
+        }
     }
 }
 
@@ -125,6 +174,17 @@ function saveToDatabase() {
 function destroyClickedElement(event) {
     document.body.removeChild(event.target);
 }
+
+$('#GeoJSON').click(function(){
+    $('#URL-field').hide();
+    $('#GeoJSON-field').show();
+});
+
+$("#URL").click(function(){
+    $('#GeoJSON-field').hide();
+    $('#URL-field').show();
+
+});
 
 function coordinateMean(GeoJSON){
     var tempcoordinates = GeoJSON.features[0].geometry.coordinates[0];
@@ -148,8 +208,10 @@ function coordinateMean(GeoJSON){
 
 function getMensas() {
     var open = "<sup style='font-size:6px; letter-spacing:3px; color: #4EAF47;' id='open'>GEO<span id='offset'>EFF</span>NET</sup><br>"
-    var closed = "<sup style='font-size:6px; letter-spacing:3px; color: #e51010' id='open'>GESC<span id='offset'>HLOS</span>SEN</sup></div>"
+    var closed = "<sup style='font-size:6px; letter-spacing:3px; color: #e51010' id='open'>GESC<span id='offset'>HLOS</span>SEN</sup>"
+    
     var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&nebrar[dist]=25' 
+    
     var date = new Date();
     date.setHours(date.getHours() + 2);
     var year = date.getFullYear().toString();
@@ -160,11 +222,14 @@ function getMensas() {
     }
     var day = date.getDate().toString();
     var linkDate = year+"-"+month+"-"+day;
+    
     var alleMensen
     fetch(url)
     .then(response => response.json())
     .then(json => {
         alleMensen = json
+        console.log(alleMensen);
+        
         alleMensen.map((mensa)=>{
             var url2 = "http://openmensa.org/api/v2/canteens/"+mensa.id+"/days/"+linkDate+"/meals"
             fetch(url2)
@@ -191,4 +256,18 @@ function getMensas() {
 $( document ).ready(function()
 {
     getMensas();
+    $('#URL-field').hide();
+/*  $('#download2').attr('disabled',true);
+        $('#FSname').keyup(function () {
+        if ($(this).val().length != 0)
+            $('#abk').keyup(function () {
+                if ($(this).val().length == 3)
+                    $('#FSurl-area').keyup(function () {
+                        if ($(this).val().length != 0)
+                            $('#download2').attr('disabled', false);
+                        else
+                            $('#download2').attr('disabled', true);
+                    })
+            })
+    }) */
 })

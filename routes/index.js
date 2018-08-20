@@ -35,9 +35,6 @@ router.get('/jsonlist', function(req, res) {
 router.get('/:id', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
-  var db = req.db;
-  var collection = db.get('institutes');
-  var json;
   collection.find({"_id": req.params.id},{},function(e,docs){
       // text is the json-string
       res.render('object', { title: 'Object: ' + docs[0].name, id: req.params.id,

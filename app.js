@@ -5,12 +5,15 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/lageplan') 
+var db = monk('localhost:27017/lageplan');
+var os = require("os");
 
+var hostname = os.hostname();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+app.listen(3000, '127.0.0.1');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
