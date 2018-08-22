@@ -6,19 +6,57 @@ block content
       .col-xs-12.col-sm-8.small
         button#delete.btn.btn-success.btn-xs(disabled='disabled')
           span.glyphicon.glyphicon-remove-circle()
-          span  Entferne GeoJSON-Schicht
+          span
+          | Entferne GeoJSON-Schicht
     .row
       #resizable.col-xs-12.col-sm-8
         #accordionMap
-        panel
-          .panel-heading.panel-default
-            a.card.panel-title(data-toggle='collapse', href='#collapseMap')
-              | Karte
-            #collapseMap.collapse.show(data-parent='#accordionMap')
-              .card
-                .card-body          
-                  .panel-body
-                    #map
+          panel
+            .panel-heading.panel-default
+              a.panel-title(data-toggle='collapse', href='#collapseMap')
+                | Karte
+              #collapseMap.collapse.show(data-parent='#accordionMap')
+                .card
+                  .card-body          
+                    .panel-body
+                      #map
+          panel
+            .panel-heading.panel-default
+              a.panel-title(data-toggle='collapse', href='#collapseExample')
+                | Beispieldaten
+              #collapseExample.collapse(data-parent='#accordionMap')
+                .card
+                  .card-body          
+                    .panel-body
+                      h4(style='color:white;') GeoJSON
+                      pre
+                        |{
+                        |  "type": "FeatureCollection",
+                        |  "features": [
+                        |    {
+                        |      "type": "Feature",
+                        |      "properties": 
+                        |      {
+                        |        "name":"Institut fuer Geoiformatik",
+                        |        "img":"https://www.uni-muenster.de/imperia/md/images/zdmgeo/_v/banner1_761x381.png"
+                        |      },
+                        |      "geometry": {
+                        |        "type": "Polygon",
+                        |        "coordinates": [
+                        |          [
+                        |            [7.5955089926719666,51.96966694957956],
+                        |            [7.595372200012207,51.96929514645031],
+                        |            [7.595951557159424,51.96921748051828],
+                        |            [7.596091032028197,51.96958928429187],
+                        |            [7.5955089926719666,51.96966694957956]
+                        |          ]
+                        |        ]
+                        |      }
+                        |    }
+                        |  ]
+                        |}
+                      h4(style='color:white;') Link
+                      pre https://raw.githubusercontent.com/yhallowiegeht/GeosoftAbgabe/master/JSON/GEO1jens.json
       #mirror.col-xs-12.col-sm-4
         #accordion  
           panel
@@ -34,6 +72,7 @@ block content
                         textarea#GeoJSONname.form-control(rows='1', placeholder="Hier Name einfügen")
                       .btn-group(style='margin-bottom: 5px;')
                         button.btn.badge#GeoJSON GeoJSON
+                        button.btn.badge(disabled='disabled') |
                         button.btn.badge#URL URL
                       br                                          
                       #GeoJSON-field
@@ -41,18 +80,19 @@ block content
                           textarea#geojson-area.form-control(rows='4', placeholder="Hier GeoJSON einfügen", style='margin-bottom: 5px;')
                           button.btn.badge(onclick='loadGeoJSON()', style='background-color: #777;')
                             span
-                            |  Zeige auf Karte
+                            | Zeige auf Karte
                       #URL-field
                         .form-group
                           textarea#url-area.form-control(rows='1', placeholder="Hier URL einfügen", style='margin-bottom: 5px;')
                           button.btn.badge(onclick='loadURL()', style='background-color: #777;')
                             span
-                            |  Zeige auf Karte
+                            | Zeige auf Karte
                       .form-group
                         br
-                        button#download.btn.btn-success.btn(onclick='saveToDatabase()', disabled='disabled')
+                        button#download.btn.btn-success.btn(onclick='saveInstToDatabase()', disabled='disabled')
                           span.glyphicon.glyphicon-save()
-                          span  In Datenbank speichern
+                          span  
+                          | In Datenbank speichern
           panel
             .panel-heading.panel-default
               .card
@@ -65,8 +105,8 @@ block content
                         .panel-body
                           .form-group
                             label.badge(for='FSname') Name
-                            form#FSname
-                              select.custom-select(name='Abkürzungen')
+                            form
+                              select#FSname.form-group(name='Abkürzungen')
                                 option(selected='')
                                 option(value='fb1') Evangelisch-Theologische Fakultät
                                 option(value='fb2') Katholisch-Theologische Fakultät
@@ -82,11 +122,10 @@ block content
                                 option(value='fb12') Chemie und Pharmazie
                                 option(value='fb13') Biologie
                                 option(value='fb14') Geowissenschaften
-                                option(value='fb15') Musikhochschule                            
-                            br
+                                option(value='fb15') Musikhochschule             
                             label.badge(for='abk') Abkürzung
-                            form#abk
-                              select.custom-select-sm(name='Abkürzungen')
+                            form
+                              select#abk.custom-select-sm(name='Abkürzungen')
                                 option(selected='')
                                 option(value='fb1') FB1
                                 option(value='fb2') FB2
@@ -102,20 +141,87 @@ block content
                                 option(value='fb12') FB12
                                 option(value='fb13') FB13
                                 option(value='fb14') FB14
-                                option(value='fb15') FB15
-                                                          
-                            br
+                                option(value='fb15') FB15                         
                             label.badge(for='FSurl-area') Webseite
                             textarea#FSurl-area.form-control(rows='1', placeholder='Hier URL einfügen')
                             br
                             label.badge(for='institute') Institute
                             textarea#institute.form-control(rows='1', placeholder='Hier Institute einfügen')
                             br
-                            button#download2.btn.btn-success.btn(onclick='saveToDatabase2()')
+                            button#download2.btn.btn-success.btn(onclick='saveFachToDatabase()')
                               span.glyphicon.glyphicon-save()
-                              span  In Datenbank speichern          
+                              span  In Datenbank speichern  
+          panel
+            .panel-heading.panel-default
+              .card
+                .card-header
+                  a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseThree')
+                    | Neue Route hinzufügen
+                  #collapseThree.collapse(data-parent='#accordion')
+                    .card-body                  
+                      panel
+                        .panel-body
+                          .form-group
+                            label.badge(for='rName') Name
+                            textarea#rName.form-control(rows='1', placeholder="Hier Name einfügen")
+                            br
+                            label.badge(for='start') Startpunkt
+                            textarea#start.form-control(rows='1', placeholder="Hier Name einfügen")
+                            br
+                            label.badge(for='end') Endpunkt
+                            textarea#end.form-control(rows='1', placeholder="Hier Name einfügen")
+                            br
+                            button#routeLaden.btn.btn-success.btn(onclick='saveRouteToDatabase()')
+                              span.glyphicon.glyphicon-road()
+                              span    Route berechnen
+          panel
+            .panel-heading.panel-default
+              .card
+                .card-header
+                  a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseFour')
+                    | Objekte laden
+                  #collapseFour.collapse.show(data-parent='#accordion')
+                    .card-body                  
+                      panel
+                        .panel-body
+                          .btn-group(style='margin-bottom: 5px;')
+                            button.btn.badge#dbInstitute Institute
+                            button.btn.badge(disabled='disabled') |
+                            button.btn.badge#dbFachbereiche Fachbereiche
+                            button.btn.badge(disabled='disabled') |
+                            button.btn.badge#dbRouten Routen                            
+                          br
+                          #dbInstitute-field
+                            .form-group
+                              textarea#instdbName.form-control(rows='1', placeholder="Hier Name einfügen")
+                              br
+                              button.btn.btn-success.btn(onclick='LoadInstituteFromDataBase()')
+                                span.glyphicon.glyphicon-list-alt()
+                                span    Objekt aus Datenbank laden  
+                          #dbFachbereiche-field
+                            .form-group
+                              textarea#fbdbName.form-control(rows='1', placeholder="Hier Name einfügen")
+                              br
+                              button.btn.btn-success.btn(onclick='LoadFachbereichFromDataBase()')
+                                span.glyphicon.glyphicon-list-alt()
+                                span    Objekt aus Datenbank laden
+                              br
+                              br
+                              pre#objOut(disabled='disabled')  
+                          #dbRouten-field
+                            .form-group
+                              textarea#routedbName.form-control(rows='1', placeholder="Hier Name einfügen")
+                              br
+                              button.btn.btn-success.btn(onclick='LoadRoutenFromDataBase()')
+                                span.glyphicon.glyphicon-list-alt()
+                                span    Objekt aus Datenbank laden
+                                                     
   // /.container
   script(src='javascripts/resize.js')
   script(src='javascripts/map.js')
+  script(src='javascripts/help_functions.js')
+  script(src='javascripts/ui_functions.js')
+  script(src='javascripts/db_functions.js')
   script(src='javascripts/map_functions.js')
+
   

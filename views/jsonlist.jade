@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  .panel.panel-default
+    .panel-heading
+      h1 Hier befinden sich alle Elemente der Datenbank
+      h5 Durch Klicken des Namens gelangt man zur Detailansicht
+    .panel-body   
+      p 
+        table.table
+          thead
+            tr
+              th name
+              th JSON
+          tbody
+            each object, i in jsonlist
+              tr
+                th 
+                  a(href="/?name=" + object.name)= object.name
+                th= object.json
+script(src='javascripts/object.js')

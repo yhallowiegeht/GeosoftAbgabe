@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title= "Objekt in Datenbank: "+ name
+    .panel-body  
+      p
+        a(href='/jsonlist')
+          button.btn.btn-success(type='button') Zurueck zur Liste
+      #map
+      #white.white= text
+      #red.white= id
+  script(src='javascripts/object.js')
+  

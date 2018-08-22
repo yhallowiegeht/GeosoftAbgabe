@@ -1,4 +1,5 @@
 'use strict';
+
 /**
  * @file This script sets up the Leaflet map
  */
@@ -40,14 +41,7 @@ map.addControl(new L.Control.Draw({
             allowIntersection: false
         }
     },
-    draw: {
-        polygon: {
-            allowIntersection: false,
-            showArea: true
-        },
-        circle: false
-
-    }
+    draw: false
 }));
 
 map.on('draw:created', function(e) {
@@ -68,35 +62,39 @@ map.on('draw:created', function(e) {
 /*
  * Add routing machine to the map
  */
-L.Routing.control({
+var control = L.Routing.control({
+    router: L.routing.mapbox('pk.eyJ1IjoiZWZmaXpqZW5zIiwiYSI6ImNqaWFkbWsxMjB1bzgzdmxtZjcxb2RrMWcifQ.By1C8AELYfvq1EpQeOVMxw'),
     routeWhileDragging: true
-}).addTo(map);
-
+  }).addTo(map);
+    
 function createButton(label, container) {
     var btn = L.DomUtil.create('button', '', container);
     btn.setAttribute('type', 'button');
     btn.innerHTML = label;
     return btn;
 }
-
+  
 map.on('click', function(e) {
+  
     var container = L.DomUtil.create('div'),
-        startBtn = createButton('Start from this location', container),
-        destBtn = createButton('Go to this location', container);
+    startBtn = createButton('Start from this location', container),
+    destBtn = createButton('Go to this location', container);
+  
     L.popup()
-        .setContent(container)
-        .setLatLng(e.latlng)
-        .openOn(map);
+    .setContent(container)
+    .setLatLng(e.latlng)
+    .openOn(map);
+  
     L.DomEvent.on(startBtn, 'click', function() {
-        control.spliceWaypoints(0, 1, e.latlng);
-        map1.closePopup();
+      control.spliceWaypoints(0, 1, e.latlng);
+      map.closePopup();
     });
-    
+  
     L.DomEvent.on(destBtn, 'click', function() {
-        control.spliceWaypoints(control.getWaypoints().length - 1, 1, e.latlng);
-        map1.closePopup();
+      control.spliceWaypoints(control.getWaypoints().length - 1, 1, e.latlng);
+      map.closePopup();
     });
-});
+  });
 
 /* 
  * Add the basemaps and overlays to the layercontrol.
