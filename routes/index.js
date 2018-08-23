@@ -36,9 +36,7 @@ router.post('/db/', function(req, res) {
 router.get('/db/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
-  var json;
   collection.find({name: req.params.name},{},function(e,docs){
-        // text is the json-string
         res.send(docs);
     });
 });

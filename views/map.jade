@@ -157,7 +157,7 @@ block content
                 .card-header
                   a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseThree')
                     | Neue Route hinzufügen
-                  #collapseThree.collapse(data-parent='#accordion')
+                  #collapseThree.collapse.show(data-parent='#accordion')
                     .card-body                  
                       panel
                         .panel-body
@@ -165,23 +165,17 @@ block content
                             label.badge(for='rName') Name
                             textarea#rName.form-control(rows='1', placeholder="Hier Name einfügen")
                             br
-                            label.badge(for='start') Startpunkt
-                            textarea#start.form-control(rows='1', placeholder="Hier Name einfügen")
-                            br
-                            label.badge(for='end') Endpunkt
-                            textarea#end.form-control(rows='1', placeholder="Hier Name einfügen")
-                            br
                             button#routeLaden.btn.btn-success.btn(onclick='saveRouteToDatabase()')
                               span.glyphicon.glyphicon-road()
-                              span    Route berechnen
+                              span    Route speichern
           panel
             .panel-heading.panel-default
               .card
                 .card-header
                   a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseFour')
                     | Objekte laden
-                  #collapseFour.collapse.show(data-parent='#accordion')
-                    .card-body                  
+                  #collapseFour.collapse(data-parent='#accordion')
+                    .card-body                 
                       panel
                         .panel-body
                           .btn-group(style='margin-bottom: 5px;')
@@ -207,7 +201,7 @@ block content
                                 span    Objekt aus Datenbank laden
                               br
                               br
-                              pre#objOut(disabled='disabled')  
+                              p#objOut(disabled='disabled', style='color:white')  
                           #dbRouten-field
                             .form-group
                               textarea#routedbName.form-control(rows='1', placeholder="Hier Name einfügen")

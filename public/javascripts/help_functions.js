@@ -1,3 +1,6 @@
+
+var linkDate;
+
 /**
 *@desc Helper function, removes element it's invoked by from DOM
 */
@@ -23,4 +26,17 @@ function coordinateMean(GeoJSON){
     LONmean = LONmean / (coordinatesLON.length-1);
     var LATLONmean = {LATmean, LONmean};
     return LATLONmean;
+}
+
+function getCurrentTime(){
+    var date = new Date();
+    date.setHours(date.getHours() + 2);
+    var year = date.getFullYear().toString();
+    if (date.getMonth() < 9){
+        var month = "0"+(date.getMonth()+1).toString();
+    } else {
+        var month = (date.getMonth()+1).toString();
+    }
+    var day = date.getDate().toString();
+    linkDate = year+"-"+month+"-"+day;
 }

@@ -5,17 +5,7 @@ function getMensas() {
     var closed = "<sup style='font-size:6px; letter-spacing:3px; color: #e51010' id='open'>GESC<span id='offset'>HLOS</span>SEN</sup>"
     
     var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&nebrar[dist]=25' 
-    
-    var date = new Date();
-    date.setHours(date.getHours() + 2);
-    var year = date.getFullYear().toString();
-    if (date.getMonth() < 9){
-        var month = "0"+(date.getMonth()+1).toString();
-    } else {
-        var month = (date.getMonth()+1).toString();
-    }
-    var day = date.getDate().toString();
-    var linkDate = year+"-"+month+"-"+day;
+    console.log(linkDate);
     
     var alleMensen
     fetch(url)

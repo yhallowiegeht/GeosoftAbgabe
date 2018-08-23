@@ -6,10 +6,6 @@ var logger = require('morgan');
 var monk = require('monk');
 var db = monk('localhost:27017/lageplan');
 
-var collection = db.get('institutes');
-    collection2 = db.get('fachschaften');
-    collection3 = db.get('routes');
-
 var os = require("os");
 var hostname = os.hostname();
 

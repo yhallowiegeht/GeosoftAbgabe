@@ -64,37 +64,13 @@ map.on('draw:created', function(e) {
  */
 var control = L.Routing.control({
     router: L.routing.mapbox('pk.eyJ1IjoiZWZmaXpqZW5zIiwiYSI6ImNqaWFkbWsxMjB1bzgzdmxtZjcxb2RrMWcifQ.By1C8AELYfvq1EpQeOVMxw'),
-    routeWhileDragging: true
-  }).addTo(map);
-    
-function createButton(label, container) {
-    var btn = L.DomUtil.create('button', '', container);
-    btn.setAttribute('type', 'button');
-    btn.innerHTML = label;
-    return btn;
-}
-  
-map.on('click', function(e) {
-  
-    var container = L.DomUtil.create('div'),
-    startBtn = createButton('Start from this location', container),
-    destBtn = createButton('Go to this location', container);
-  
-    L.popup()
-    .setContent(container)
-    .setLatLng(e.latlng)
-    .openOn(map);
-  
-    L.DomEvent.on(startBtn, 'click', function() {
-      control.spliceWaypoints(0, 1, e.latlng);
-      map.closePopup();
-    });
-  
-    L.DomEvent.on(destBtn, 'click', function() {
-      control.spliceWaypoints(control.getWaypoints().length - 1, 1, e.latlng);
-      map.closePopup();
-    });
-  });
+    waypoints: [
+        L.latLng(57.74, 11.94),
+        L.latLng(57.6792, 11.949)
+    ],
+    routeWhileDragging: true,
+    geocoder: L.Control.Geocoder.nominatim()
+}).addTo(map);
 
 /* 
  * Add the basemaps and overlays to the layercontrol.

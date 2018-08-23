@@ -30,8 +30,8 @@ class fachschaft {
 class route {
     /**
     * @param{string} name - name of the figures
-    * @param{} start - start of the route
-    * @param{} end - end of the route
+    * @param{string} start - start of the route
+    * @param{string} end - end of the route
     */
     constructor(name, start, end) {
         this.name = name;
@@ -102,22 +102,25 @@ function saveFachToDatabase() {
  * @desc makes an AJAX post request with the data to later store it in the database
  */
 function saveRouteToDatabase() {
-    var name = document.getElementById('rName').value;     
+    var waypoint = control.getWaypoints() 
+    
+    var name = document.getElementById('rName').value;
+    var ziel = waypoint[1].name;
+    var start = waypoint[0].name;
+
     if(name.length==0) {
-        alert("Error: Bidde gib ein vernünftige Name");
-    }   else {
-        var start = ''
-        var end = ''
-        var dbObject = new route(name, start, end);
-        $.ajax({
-            type: 'POST',
-            data: dbObject,
-            url: "/db/",
-            success: function(result){
-                alert("erfolgreich gespeichert!");
-            },
-            error: function(xhr,status,error){
-                alert(error.info);
+        alert("Bitte Namen eingeben");
+        }  else {
+            var dbObject = new route(name,start,ziel);
+            $.ajax({
+                type: 'POST',
+                data: dbObject,
+                url: "/db/",
+                success: function(result){
+                    console.log("Erfolg")
+                },
+                error: function(xhr,status,error){
+                    console.log("Miserfolg")
             }
         });
     }
@@ -135,11 +138,8 @@ function LoadFachbereichFromDataBase(){
             url: url,
             async:false,
             success: function(res){
-                document.getElementById('objOut').innerHTML = "Fachschaftsname: "+res[0].name+"\nAbkurzung: "+res[0].short+"\nWebsite:"+res[0].site;
-                console.log(res)
-                console.log(res.body);
-                console.log("erfolgreich geladen!");
-                
+                document.getElementById('objOut').innerHTML = "Fachschaftsname: "+res[0].name+"<br>Abkürzung: "+res[0].short+"<br>Website:"+res[0].site;
+                console.log("erfolgreich geladen!");    
             },
             error: function(xhr,status,error){
                 console.log(error.info);
@@ -150,7 +150,7 @@ function LoadFachbereichFromDataBase(){
 
 function LoadInstituteFromDataBase(){
     var name = document.getElementById('instdbName').value;
-    var url = "/db/"+name+'/'
+    var url = "/db/"+name+"/"
     if(name.length==0) {
         alert("Error: Bidde gib ein Name ein");
     }   else {
@@ -160,16 +160,12 @@ function LoadInstituteFromDataBase(){
             url: url,
             async:false,
             success: function(res){
-                var foot = JSON.parse(res[0].json);
-                console.log(foot);
-                var feat = foot.features[0];
-                var laylay = L.geoJson(feat);
-                var LATLON = coordinateMean(feat);
-                var maymay = L.marker([LATLON.LATmean, LATLON.LONmean]);
-                laylay.addTo(map);
-                maymay.addTo(map).bindPopup(/*"<h5>"+name+"<h5><img src="+bild+" width='200'><br>"*/).openPopup();
-                drawnItems.addLayer(laylay);
-                drawnItems.addLayer(maymay);
+                var instDB = JSON.parse(res[0].json);
+                var layer = L.geoJson(instDB.features[0]).addTo(map);
+                var marker = L.marker([instDB.features[1].geometry.coordinates[1], instDB.features[1].geometry.coordinates[0]]);             
+                marker.addTo(map).bindPopup("<h5>"+instDB.features[0].features[0].properties.name+"<h5><img src="+instDB.features[0].features[0].properties.img+" width='200'><br>").openPopup();
+                drawnItems.addLayer(layer);
+                drawnItems.addLayer(marker);
                 console.log("erfolgreich geladen!");                
             },
             error: function(xhr,status,error){
@@ -181,7 +177,7 @@ function LoadInstituteFromDataBase(){
 
 function LoadRoutenFromDataBase(){
     var name = document.getElementById('routedbName').value;
-    var url = "/db/"+name+'/'
+    var url = "/db/"+name+"/"
     if(name.length==0) {
         alert("Error: Bidde gib ein Name ein");
     }   else {
@@ -192,8 +188,7 @@ function LoadRoutenFromDataBase(){
             async:false,
             success: function(res){
                 console.log(res[0].start);
-                console.log("erfolgreich geladen!");
-                
+                console.log("erfolgreich geladen!");    
             },
             error: function(xhr,status,error){
                 console.log(error.info);
