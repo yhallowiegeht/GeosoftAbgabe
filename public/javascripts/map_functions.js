@@ -1,12 +1,11 @@
 'use strict';
 
-function getMensas() {
+function getMensa() {
     var open = "<sup style='font-size:6px; letter-spacing:3px; color: #4EAF47;' id='open'>GEO<span id='offset'>EFF</span>NET</sup><br>"
     var closed = "<sup style='font-size:6px; letter-spacing:3px; color: #e51010' id='open'>GESC<span id='offset'>HLOS</span>SEN</sup>"
     
     var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.962981&near[lng]=7.625772&nebrar[dist]=25' 
-    console.log(linkDate);
-    
+    getCurrentTime();
     var alleMensen
     fetch(url)
     .then(response => response.json())
@@ -24,12 +23,14 @@ function getMensas() {
                 }
             })
             .then((json)=>{
-                var gerichte=""
-                json.map((gericht)=>{
-                    gerichte+="<ins>"+gericht.category+"</ins>: "+gericht.name+" [Studenten: "+gericht.prices.students+"€, Mitarbeiter: "+gericht.prices.employees+"€, Andere: "+gericht.prices.others+"€]<br><br>"
-                })
-                L.marker([mensa.coordinates[0], mensa.coordinates[1]], {icon: greenIcon}).addTo(map)
-                    .bindPopup("<h4>"+mensa.name+"  "+open+"</h4><em>"+mensa.address+"</em><br><h5>Tagesgerichte:</h5>"+gerichte);
+                if (typeof json !== 'undefined') {
+                    var gerichte=""
+                    json.map((gericht)=>{
+                        gerichte+="<ins>"+gericht.category+"</ins>: "+gericht.name+" [Studenten: "+gericht.prices.students+"€, Mitarbeiter: "+gericht.prices.employees+"€, Andere: "+gericht.prices.others+"€]<br><br>"
+                    })
+                    L.marker([mensa.coordinates[0], mensa.coordinates[1]], {icon: greenIcon}).addTo(map)
+                        .bindPopup("<h4>"+mensa.name+"  "+open+"</h4><em>"+mensa.address+"</em><br><h5>Tagesgerichte:</h5>"+gerichte);
+                }
             })
         })
     })
@@ -53,6 +54,5 @@ $('#delete').click(function() {
 
 $( document ).ready(function()
 {
-    getMensas();
-    $('#URL-field').hide();
+    getMensa();
 })

@@ -11,19 +11,21 @@ class institute {
     constructor(name, json) {
         this.name = name;
         this.json = json;
+        this.type = "institute";
     }
 }
 
 class fachschaft {
     /**
-    * @param{string} short - short terminology of fachschaft
+    * @param{string} name - name terminology of fachschaft
     * @param{string} site - URL of the fachschaft
     * @param{} institutes - All institutes belonging to the fachschaft
     */
-    constructor(short, site, institutes) {
-        this.short = short;
+    constructor(name, site, institutes) {
+        this.name = name;
         this.site = site;
         this.institutes = institutes;
+        this.type = "fachbereich";
     }
 }
 
@@ -37,6 +39,7 @@ class route {
         this.name = name;
         this.start = start;
         this.end = end;
+        this.type = "route";
     }
 }
   
@@ -44,17 +47,17 @@ class route {
  * @desc makes an AJAX post request with the data to later store it in the database
  */
 function saveInstToDatabase() {
-    var textfield = document.getElementById('GeoJSONname').value;     
-    if(textfield.length==0) {
+    var name = document.getElementById('GeoJSONname').value;     
+    if(name.length==0) {
         alert("Error: Bidde gib ein Name");
     }   else {
         var data = drawnItems.toGeoJSON();
-        var dbObject = new institute(textfield, "");
+        var dbObject = new institute(name, "");
         dbObject.json = JSON.stringify(data);
         $.ajax({
             type: 'POST',
             data: dbObject,
-            url: "/db/",
+            url: '/db/institutes/',
             success: function(result){
                 alert("erfolgreich gespeichert!");
             },
@@ -70,22 +73,18 @@ function saveInstToDatabase() {
  */
 function saveFachToDatabase() {
     var name = document.getElementById('FSname').value;     
-    if(name.length==0) {
-        alert("Error: Bidde gib ein vernünftige Name");
-    }   else {
-        var short = document.getElementById('abk').value;
-        if(short.length!=3) {
-            alert("Error: Bidde gib eine Abk");
+        if(name.length!=3) {
+            alert("Error: Bidde gib einen Namen");
         }   else {
             var site = document.getElementById('FSurl-area').value;
-            if(short.length==0) {
+            if(name.length==0) {
                 alert("Error: Bidde gib eine URL");
             }   else {
-                var dbObject = new fachschaft(short, site, "");
+                var dbObject = new fachschaft(name, site, "");
                 $.ajax({
                     type: 'POST',
                     data: dbObject,
-                    url: "/db/",
+                    url: '/db/fachbereiche/',
                     success: function(result){
                         alert("erfolgreich gespeichert!");
                     },
@@ -96,18 +95,15 @@ function saveFachToDatabase() {
             }
         }
     }
-}
 
 /**
  * @desc makes an AJAX post request with the data to later store it in the database
  */
 function saveRouteToDatabase() {
-    var waypoint = control.getWaypoints() 
-    
+    var waypoint = control.getWaypoints();
     var name = document.getElementById('rName').value;
-    var ziel = waypoint[1].name;
-    var start = waypoint[0].name;
-
+    var start = JSON.stringify(waypoint[0]);
+    var ziel = JSON.stringify(waypoint[1]);
     if(name.length==0) {
         alert("Bitte Namen eingeben");
         }  else {
@@ -115,7 +111,7 @@ function saveRouteToDatabase() {
             $.ajax({
                 type: 'POST',
                 data: dbObject,
-                url: "/db/",
+                url: '/db/routes/',
                 success: function(result){
                     console.log("Erfolg")
                 },
@@ -128,7 +124,8 @@ function saveRouteToDatabase() {
 
 function LoadFachbereichFromDataBase(){
     var name = document.getElementById('fbdbName').value;
-    var url = "/db/"+name+'/'
+    var url = "/db/fachbereiche/"+name+'/'
+    var num = name.replace( /^\D+/g, '');
     if(name.length==0) {
         alert("Error: Bidde gib ein Name ein");
     }   else {
@@ -138,7 +135,8 @@ function LoadFachbereichFromDataBase(){
             url: url,
             async:false,
             success: function(res){
-                document.getElementById('objOut').innerHTML = "Fachschaftsname: "+res[0].name+"<br>Abkürzung: "+res[0].short+"<br>Website:"+res[0].site;
+                console.log(res);
+                document.getElementById('objOut').innerHTML = "Fachschaftsname: "+document.getElementById("FSname")[num].innerHTML+"<br>Abkürzung: "+res[0].name+"<br>Website: "+res[0].site;
                 console.log("erfolgreich geladen!");    
             },
             error: function(xhr,status,error){
@@ -150,7 +148,7 @@ function LoadFachbereichFromDataBase(){
 
 function LoadInstituteFromDataBase(){
     var name = document.getElementById('instdbName').value;
-    var url = "/db/"+name+"/"
+    var url = "/db/institutes/"+name+"/"
     if(name.length==0) {
         alert("Error: Bidde gib ein Name ein");
     }   else {
@@ -177,7 +175,7 @@ function LoadInstituteFromDataBase(){
 
 function LoadRoutenFromDataBase(){
     var name = document.getElementById('routedbName').value;
-    var url = "/db/"+name+"/"
+    var url = "/db/routes/"+name+"/"
     if(name.length==0) {
         alert("Error: Bidde gib ein Name ein");
     }   else {
@@ -187,7 +185,9 @@ function LoadRoutenFromDataBase(){
             url: url,
             async:false,
             success: function(res){
-                console.log(res[0].start);
+                var start= JSON.parse(res[0].start);
+                var end = JSON.parse(res[0].end);
+                control.setWaypoints([start, end]);
                 console.log("erfolgreich geladen!");    
             },
             error: function(xhr,status,error){

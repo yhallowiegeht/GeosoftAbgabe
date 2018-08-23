@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var monk = require('monk');
 var db = monk('localhost:27017/lageplan');
+var JL = require('jsnlog').JL;
 
 var os = require("os");
 var hostname = os.hostname();

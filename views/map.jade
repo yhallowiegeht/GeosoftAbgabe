@@ -106,42 +106,23 @@ block content
                           .form-group
                             label.badge(for='FSname') Name
                             form
-                              select#FSname.form-group(name='Abkürzungen')
+                              select#FSname.form-group(name='Fachbereiche')
                                 option(selected='')
-                                option(value='fb1') Evangelisch-Theologische Fakultät
-                                option(value='fb2') Katholisch-Theologische Fakultät
-                                option(value='fb3') Rechtswissenschaftliche Fakultät
-                                option(value='fb4') Wirtschaftwissenschaftliche Fakultät
-                                option(value='fb5') Medizinische Fakultät
-                                option(value='fb6') Erziehungswissenschaft und Sozialwissenschaften
-                                option(value='fb7') Psychologie und Sportwissenschaften
-                                option(value='fb8') Geschichte/Philosophie
-                                option(value='fb9') Philologie
-                                option(value='fb10') Mathematik und Informatik
-                                option(value='fb11') Physik
-                                option(value='fb12') Chemie und Pharmazie
-                                option(value='fb13') Biologie
-                                option(value='fb14') Geowissenschaften
-                                option(value='fb15') Musikhochschule             
-                            label.badge(for='abk') Abkürzung
-                            form
-                              select#abk.custom-select-sm(name='Abkürzungen')
-                                option(selected='')
-                                option(value='fb1') FB1
-                                option(value='fb2') FB2
-                                option(value='fb3') FB3
-                                option(value='fb4') FB4
-                                option(value='fb5') FB5
-                                option(value='fb6') FB6
-                                option(value='fb7') FB7
-                                option(value='fb8') FB8
-                                option(value='fb9') FB9
-                                option(value='fb10') FB10
-                                option(value='fb11') FB11
-                                option(value='fb12') FB12
-                                option(value='fb13') FB13
-                                option(value='fb14') FB14
-                                option(value='fb15') FB15                         
+                                option(value='fb1') [FB01] Evangelisch-Theologische Fakultät
+                                option(value='fb2') [FB02] Katholisch-Theologische Fakultät
+                                option(value='fb3') [FB03] Rechtswissenschaftliche Fakultät
+                                option(value='fb4') [FB04] Wirtschaftwissenschaftliche Fakultät
+                                option(value='fb5') [FB05] Medizinische Fakultät
+                                option(value='fb6') [FB06] Erziehungswissenschaft und Sozialwissenschaften
+                                option(value='fb7') [FB07] Psychologie und Sportwissenschaften
+                                option(value='fb8') [FB08] Geschichte/Philosophie
+                                option(value='fb9') [FB09] Philologie
+                                option(value='fb10') [FB10] Mathematik und Informatik
+                                option(value='fb11') [FB11] Physik
+                                option(value='fb12') [FB12] Chemie und Pharmazie
+                                option(value='fb13') [FB13] Biologie
+                                option(value='fb14') [FB14] Geowissenschaften
+                                option(value='fb15') [FB15] Musikhochschule          
                             label.badge(for='FSurl-area') Webseite
                             textarea#FSurl-area.form-control(rows='1', placeholder='Hier URL einfügen')
                             br
@@ -157,7 +138,7 @@ block content
                 .card-header
                   a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseThree')
                     | Neue Route hinzufügen
-                  #collapseThree.collapse.show(data-parent='#accordion')
+                  #collapseThree.collapse(data-parent='#accordion')
                     .card-body                  
                       panel
                         .panel-body
@@ -174,7 +155,7 @@ block content
                 .card-header
                   a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseFour')
                     | Objekte laden
-                  #collapseFour.collapse(data-parent='#accordion')
+                  #collapseFour.collapse.show(data-parent='#accordion')
                     .card-body                 
                       panel
                         .panel-body
@@ -212,8 +193,8 @@ block content
                                                      
   // /.container
   script(src='javascripts/resize.js')
-  script(src='javascripts/map.js')
   script(src='javascripts/help_functions.js')
+  script(src='javascripts/map.js')
   script(src='javascripts/ui_functions.js')
   script(src='javascripts/db_functions.js')
   script(src='javascripts/map_functions.js')

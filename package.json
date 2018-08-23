@@ -16,6 +16,8 @@
     "lodash": "^4.17.10",
     "mongodb": "^3.0.5",
     "monk": "^6.0.5",
-    "morgan": "~1.9.0"
+    "morgan": "~1.9.0",
+    "jsnlog": "^2.26.2",
+    "jsnlog-nodejs": "^2.26.2"
   }
 }

@@ -97,5 +97,6 @@ $('#dbRouten').click(function(){
 $(document).ready(function(){
     $('#dbInstitute-field').hide();
     $('#dbFachbereiche-field').hide();
-    $('#dbRouten-field').hide();    
+    $('#dbRouten-field').hide();
+    $('#URL-field').hide();    
 });

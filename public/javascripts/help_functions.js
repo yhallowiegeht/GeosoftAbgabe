@@ -40,3 +40,10 @@ function getCurrentTime(){
     var day = date.getDate().toString();
     linkDate = year+"-"+month+"-"+day;
 }
+
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+}
