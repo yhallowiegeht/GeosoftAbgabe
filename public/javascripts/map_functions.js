@@ -37,7 +37,8 @@ function getMensa() {
 }
 
 /**
-* Show the Route to the nearest Mensa for a given lat,lon
+* Show the Route to the nearest Mensa for a given lat,lon 
+* credit to N Asse for glorious work with this abgabe
 */
 function navToMensa(lat,lon){
     var Mensen
@@ -59,17 +60,16 @@ function navToMensa(lat,lon){
         fetch(url2)
         .then(response => response.json())
         .then(json => {
-            console.log(json);
             control.setWaypoints([
                 L.latLng(lat, lon),
                 L.latLng(json.coordinates[0],json.coordinates[1]) 
               ]);
         })
+        getMensa();
     })    
 }
 
 $( document ).ready(function()
 {
     getMensa();
-    navToMensa(51.9636, 7.615);
 })

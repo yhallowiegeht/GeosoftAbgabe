@@ -120,7 +120,7 @@ router.get('/db/institutes/:name', function(req, res) {
 router.put('/db/institutes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
-  collection.updateOne({name: req.params.name},{ $set: {json: req.params.json, picture:req.params.picture } },
+  collection.update({name: req.params.name},{ $set: object },
     function(e,docs){
       res.send(docs)
   });
@@ -128,7 +128,7 @@ router.put('/db/institutes/:name', function(req, res) {
 .put('/db/fachbereiche/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('fachbereiche');
-  collection.updateOne({name: req.params.name},{ $set: {website: req.params.website, institute:req.params.institute } },
+  collection.update({name: req.params.name},{ $set: object },
     function(e,docs){
       res.send(docs)
   });
@@ -136,7 +136,7 @@ router.put('/db/institutes/:name', function(req, res) {
 .put('/db/routes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('routes');
-  collection.updateOne({name: req.params.name},{ $set: {db: req.params.db, ziel:req.params.ziel } },
+  collection.update({name: req.params.name},{ $set: object },
     function(e,docs){
       res.send(docs)
   });
@@ -148,21 +148,21 @@ router.put('/db/institutes/:name', function(req, res) {
 router.delete('/db/institutes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
-  collection.deleteOne({name: req.params.name},function(e,docs){
+  collection.remove({name: req.params.name},function(e,docs){
       res.send(docs)
   });
 })
 .delete('/db/fachbereiche/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('fachbereiche');
-  collection.deleteOne({name: req.params.name},function(e,docs){
+  collection.remove({name: req.params.name},function(e,docs){
       res.send(docs)
   });
 })
 .delete('/db/routes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('routes');
-  collection.deleteOne({name: req.params.name},function(e,docs){
+  collection.remove({name: req.params.name},function(e,docs){
       res.send(docs)
   });
 });

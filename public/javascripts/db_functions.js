@@ -205,3 +205,150 @@ function LoadRoutenFromDataBase(){
         });
     }
 }
+
+/**
+ * @desc makes an AJAX post request with the data to later store it in the database
+ */
+function UpdateInstInDatabase() {
+    var name = document.getElementById('GeoJSONname').value;     
+    if(name.length==0) {
+        alert("Error: Bidde gib ein Name");
+    }   else {
+        var data = drawnItems.toGeoJSON();
+        var dbObject = new institute(name, "");
+        dbObject.json = JSON.stringify(data);
+        $.ajax({
+            type: 'PUT',
+            data: dbObject,
+            url: '/db/institutes/',
+            success: function(result){
+                console.log("erfolgreich geupdated!");
+            },
+            error: function(xhr,status,error){
+                console.log(error.info);
+            }
+        });
+    }
+}
+
+/**
+ * @desc makes an AJAX post request with the data to later store it in the database
+ */
+function UpdateFSInDatabase() {
+    var name = document.getElementById('FSname').value;
+    console.log(name);     
+    if(name.length==0) {
+        alert("Error: Bidde gib einen Namen");
+    }   else {
+        var site = document.getElementById('FSurl').value;
+        console.log(site);
+        if(site.length==0) {
+            alert("Error: Bidde gib eine URL");
+        }   else {
+            var inst = document.getElementById('institute').value;
+            console.log(inst);
+            if(inst.length==0) {
+                alert("Error: Bidde gib mindestens ein Institut an");
+            } else {
+                var dbObject = new fachschaft(name, site, inst);
+                $.ajax({
+                    type: 'PUT',
+                    data: dbObject,
+                    url: '/db/fachbereiche/',
+                    success: function(result){
+                        console.log("erfolgreich geupdated!");
+                    },
+                    error: function(xhr,status,error){
+                        console.log(error.info);
+                    }
+                });
+            }
+        }
+    }
+}
+
+/**
+ * @desc makes an AJAX post request with the data to later store it in the database
+ */
+function UpdateRouteInDatabase() {
+    var waypoint = control.getWaypoints();
+    var name = document.getElementById('rName').value;
+    var start = JSON.stringify(waypoint[0]);
+    var ziel = JSON.stringify(waypoint[1]);
+    if(name.length==0) {
+        alert("Bitte Namen eingeben");
+        }  else {
+            var dbObject = new route(name,start,ziel);
+            $.ajax({
+                type: 'PUT',
+                data: dbObject,
+                url: '/db/routes/',
+                success: function(result){
+                    console.log("erfolgreich geupdated!")
+                },
+                error: function(xhr,status,error){
+                    console.log(error.info)
+            }
+        });
+    }
+}
+
+function DeleteFachbereichFromDataBase(){
+    var name = document.getElementById('fbdbName').value;
+    var url = "/db/fachbereiche/"+name+'/'
+    if(name.length==0) {
+        alert("Error: Bidde gib ein Name ein");
+    }   else {
+        $.ajax({
+            type: 'DELETE',
+            url: url,
+            async:false,
+            success: function(res){
+                console.log("erfolgreich geloescht!");    
+            },
+            error: function(xhr,status,error){
+                console.log(error.info);
+            }
+        });
+    }
+}
+
+function DeleteInstituteFromDataBase(){
+    var name = document.getElementById('instdbName').value;
+    var url = "/db/institutes/"+name+"/"
+    if(name.length==0) {
+        alert("Error: Bidde gib ein Name ein");
+    }   else {
+        $.ajax({
+            type: 'DELETE',
+            url: url,
+            async:false,
+            success: function(res){
+                console.log("erfolgreich geloescht!");                
+            },
+            error: function(xhr,status,error){
+                console.log(error.info);
+            }
+        });
+    }
+}
+
+function DeleteRoutenFromDataBase(){
+    var name = document.getElementById('routedbName').value;
+    var url = "/db/routes/"+name+"/"
+    if(name.length==0) {
+        alert("Error: Bidde gib ein Name ein");
+    }   else {
+        $.ajax({
+            type: 'DELETE',
+            url: url,
+            async:false,
+            success: function(res){
+                console.log("erfolgreich geloescht!");    
+            },
+            error: function(xhr,status,error){
+                console.log(error.info);
+            }
+        });
+    }
+}
