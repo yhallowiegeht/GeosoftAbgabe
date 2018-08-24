@@ -8,7 +8,7 @@ var jsnlog_nodejs = require('jsnlog-nodejs').jsnlog_nodejs;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Geosoftware I - Endabgabe - Start' });
+  res.render('index', { title: 'Geosoftware I - Endabgabe - db' });
 });
 
 /* GET map page. */
@@ -78,7 +78,10 @@ router.post('/db/institutes/', function(req, res) {
     });
   }
 });
-
+/*
+* handling database insert post request when clicking button in map
+* sending the data of the request to the respective database collections
+*/
 router.get('/db/institutes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
@@ -111,6 +114,58 @@ router.get('/db/institutes/:name', function(req, res) {
   }); 
 });
 
+/*
+* handling database update request when clicking button in map
+*/
+router.put('/db/institutes/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('institutes');
+  collection.updateOne({name: req.params.name},{ $set: {json: req.params.json, picture:req.params.picture } },
+    function(e,docs){
+      res.send(docs)
+  });
+})
+.put('/db/fachbereiche/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('fachbereiche');
+  collection.updateOne({name: req.params.name},{ $set: {website: req.params.website, institute:req.params.institute } },
+    function(e,docs){
+      res.send(docs)
+  });
+})
+.put('/db/routes/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('routes');
+  collection.updateOne({name: req.params.name},{ $set: {db: req.params.db, ziel:req.params.ziel } },
+    function(e,docs){
+      res.send(docs)
+  });
+});
+
+/*
+* handling database delete request when clicking button in map
+*/
+router.delete('/db/institutes/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('institutes');
+  collection.deleteOne({name: req.params.name},function(e,docs){
+      res.send(docs)
+  });
+})
+.delete('/db/fachbereiche/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('fachbereiche');
+  collection.deleteOne({name: req.params.name},function(e,docs){
+      res.send(docs)
+  });
+})
+.delete('/db/routes/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('routes');
+  collection.deleteOne({name: req.params.name},function(e,docs){
+      res.send(docs)
+  });
+});
 
 // jsnlog.js on the client by default sends log messages to /jsnlog.logger, using POST.
 router.post('*.logger', function (req, res) {

@@ -22,11 +22,3 @@ block content
                 th
                   a(href='/'+object.institutes)= object.institutes
 script(src='javascripts/object.js')
-script.
-  console.log("mois")
-  $( document ).ready(function()
-  {
-    $.get('map.jade', null, function(value){
-      alert($(value).find('#fbdName'));
-    });
-  })

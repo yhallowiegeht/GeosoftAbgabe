@@ -172,6 +172,7 @@ function LoadInstituteFromDataBase(){
                 marker.addTo(map).bindPopup("<h5>"+instDB.features[0].features[0].properties.name+"<h5><img src="+instDB.features[0].features[0].properties.img+" width='200'><br>").openPopup();
                 drawnItems.addLayer(layer);
                 drawnItems.addLayer(marker);
+                navToMensa(instDB.features[1].geometry.coordinates[1],instDB.features[1].geometry.coordinates[0]);
                 console.log("erfolgreich geladen!");                
             },
             error: function(xhr,status,error){
