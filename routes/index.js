@@ -16,6 +16,17 @@ router.get('/map', function(req, res, next) {
   res.render('map', { title: 'Geosoftware I - Endabgabe - Lageplan' });
 });
 
+/* GET database page that contains all objects of our database. */
+router.get('/database', function(req, res) {
+  var db = req.db;
+  var collection = db.get('fachbereiche');
+  collection.find({},{},function(e,docs){
+      res.render('database', {
+          'database' : docs, title: "Datenbank Objekte"
+      });
+  });
+});
+
 /* GET impressum page. */
 router.get('/impressum', function(req, res, next) {
   res.render('impressum', { title: 'Geosoftware I - Endabgabe - Impressum' });
@@ -89,6 +100,16 @@ router.get('/db/institutes/:name', function(req, res) {
           res.send(docs);
     })
   })
+.get('/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('institutes');
+  collection.find({"name": req.params.name},{},function(e,docs){
+    var baba = JSON.parse(docs[0].json);
+    JL().info(baba.features[0].features[0].properties.name);
+    res.render('object', {title: 'Objekt: ' + JSON.stringify(baba.features[0].features[0].properties.name), text: JSON.stringify(docs[0].json), dbName:JSON.stringify(docs[0].name)});
+  JL().info("Currently retrieving object with id... "+req.params.id+ "...");  
+  }); 
+});
 
 
 // jsnlog.js on the client by default sends log messages to /jsnlog.logger, using POST.

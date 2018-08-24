@@ -16,10 +16,16 @@ loadGeomitriesOfObject();
 * function takes the geojson of the particular object and projects it on the map
 */
 function loadGeomitriesOfObject() {
-  // get geojson of object
   var json = document.getElementById("white").innerHTML;
   var geojson = JSON.parse(json);
-  geojson = JSON.parse("" + geojson + "");
-  var layer = L.geoJSON(geojson).addTo(map);
+  geojson = JSON.parse(""+geojson+"");
+  var bild = geojson.features[0].features[0].properties.img;
+  var iname = geojson.features[0].features[0].properties.name;
+  var layer = L.geoJSON(geojson[0]).addTo(map);
   map.fitBounds(layer.getBounds());
 }
+
+// var name = document.getElementById('fbdbName').value;
+// var num = name.replace( /^\D+/g, '');
+// var FSname = document.getElementById("FSname")[num].innerHTML;
+

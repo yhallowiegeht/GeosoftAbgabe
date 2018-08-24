@@ -59,10 +59,10 @@ function saveInstToDatabase() {
             data: dbObject,
             url: '/db/institutes/',
             success: function(result){
-                alert("erfolgreich gespeichert!");
+                console.log("erfolgreich gespeichert!");
             },
             error: function(xhr,status,error){
-                alert(error);
+                console.log(error.info);
             }
         });
     }
@@ -72,29 +72,37 @@ function saveInstToDatabase() {
  * @desc makes an AJAX post request with the data to later store it in the database
  */
 function saveFachToDatabase() {
-    var name = document.getElementById('FSname').value;     
-        if(name.length!=3) {
-            alert("Error: Bidde gib einen Namen");
+    var name = document.getElementById('FSname').value;
+    console.log(name);     
+    if(name.length==0) {
+        alert("Error: Bidde gib einen Namen");
+    }   else {
+        var site = document.getElementById('FSurl').value;
+        console.log(site);
+        if(site.length==0) {
+            alert("Error: Bidde gib eine URL");
         }   else {
-            var site = document.getElementById('FSurl-area').value;
-            if(name.length==0) {
-                alert("Error: Bidde gib eine URL");
-            }   else {
-                var dbObject = new fachschaft(name, site, "");
+            var inst = document.getElementById('institute').value;
+            console.log(inst);
+            if(inst.length==0) {
+                alert("Error: Bidde gib mindestens ein Institut an");
+            } else {
+                var dbObject = new fachschaft(name, site, inst);
                 $.ajax({
                     type: 'POST',
                     data: dbObject,
                     url: '/db/fachbereiche/',
                     success: function(result){
-                        alert("erfolgreich gespeichert!");
+                        console.log("erfolgreich gespeichert!");
                     },
                     error: function(xhr,status,error){
-                        alert(error);
+                        console.log(error.info);
                     }
                 });
             }
         }
     }
+}
 
 /**
  * @desc makes an AJAX post request with the data to later store it in the database
@@ -113,10 +121,10 @@ function saveRouteToDatabase() {
                 data: dbObject,
                 url: '/db/routes/',
                 success: function(result){
-                    console.log("Erfolg")
+                    console.log("erfolgreich gespeichert!")
                 },
                 error: function(xhr,status,error){
-                    console.log("Miserfolg")
+                    console.log(error.info)
             }
         });
     }

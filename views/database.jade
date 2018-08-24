@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  .panel.panel-default
+    .panel-heading
+      h1 Hier befinden sich alle Fachbereiche der Datenbank
+      h5 Durch Klicken des Namens eines Instituts gelangt man zur Detailansicht
+    .panel-body   
+      p 
+        table.table
+          thead
+            tr
+              th Name
+              th Website
+              th Institute
+          tbody
+            each object, i in database
+              tr
+                th= object.name
+                th
+                  a(href=object.site)= object.site
+                th
+                  a(href='/'+object.institutes)= object.institutes
+script(src='javascripts/object.js')
+script.
+  console.log("mois")
+  $( document ).ready(function()
+  {
+    $.get('map.jade', null, function(value){
+      alert($(value).find('#fbdName'));
+    });
+  })
