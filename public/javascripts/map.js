@@ -63,10 +63,7 @@ map.on('draw:created', function(e) {
  * Add routing machine to the map
  */
 var control = L.Routing.control({
-    router: L.routing.mapbox('pk.eyJ1IjoiZWZmaXpqZW5zIiwiYSI6ImNqaWFkbWsxMjB1bzgzdmxtZjcxb2RrMWcifQ.By1C8AELYfvq1EpQeOVMxw'),
-    waypoints: [
-        L.latLng(51.9636,7.615),
-        L.latLng(51.6792, 7.949)],
+    router: L.routing.mapbox('pk.eyJ1IjoiZWZmaXpqZW5zIiwiYSI6ImNqaWFkbWsxMjB1bzgzdmxtZjcxb2RrMWcifQ.By1C8AELYfvq1EpQeOVMxw'),   
     routeWhileDragging: true,
     geocoder: L.Control.Geocoder.nominatim()
 }).addTo(map);

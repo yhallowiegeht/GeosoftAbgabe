@@ -44,34 +44,32 @@ function navToMensa(lat,lon){
     var Mensen2
     var Abstand = []
     var ID = []
-    var index = 1
+    //var index = 1
     var url = 'http://openmensa.org/api/v2/canteens?near[lat]=51.9629731&near[lng]=7.625654&nebrar[dist]=20' 
     fetch(url)
     .then(response => response.json())
     .then(json => {
-        Mensen  = json
-        Mensen.map((mensa)=>{
-            Abstand[index]=distance(mensa.coordinates[0], mensa.coordinates[1],lat,lon)
-            ID[index]=mensa.id
-            index= index+1
+        for(var i = 1; i < json.length; i++) {
+            Abstand.push(distance(json[i].coordinates[0], json[i].coordinates[1],lat,lon));
+            ID.push(json[i].id);
+        }
+        var min = Math.min(...Abstand);
+        var min2 = Abstand.indexOf(min,0);
+        var url2 = "http://openmensa.org/api/v2/canteens/"+ID[min2]
+        fetch(url2)
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            control.setWaypoints([
+                L.latLng(lat, lon),
+                L.latLng(json.coordinates[0],json.coordinates[1]) 
+              ]);
         })
-    })
-    var min = Math.min(Abstand)
-    console.log(Abstand)
-    var min2 = Abstand.indexOf(min,0) //- displays the index of the nearest Mensa
-    var url2 = "http://openmensa.org/api/v2/canteens/"+ID[min2]
-    fetch(url2)
-    .then(response => response.json())
-    .then(json => {
-        Mensen2 = json
-        control.setWaypoints([
-            L.latLng(mensa.coordinates[0],mensa.coordinates[1]),
-            L.latLng(lat, lon)
-          ]);
-    })
+    })    
 }
 
 $( document ).ready(function()
 {
     getMensa();
+    navToMensa(51.9636, 7.615);
 })
