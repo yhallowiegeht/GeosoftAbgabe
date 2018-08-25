@@ -1,5 +1,9 @@
 'use strict';
 
+/** 
+ * retrieves every Mensa with a 25km radius around the Domplatz in MS
+ * and gives the meal of the day if there is data 
+ */
 function getMensa() {
     var open = "<sup style='font-size:6px; letter-spacing:3px; color: #4EAF47;' id='open'>GEO<span id='offset'>EFF</span>NET</sup><br>"
     var closed = "<sup style='font-size:6px; letter-spacing:3px; color: #e51010' id='open'>GESC<span id='offset'>HLOS</span>SEN</sup>"
@@ -37,8 +41,8 @@ function getMensa() {
 }
 
 /**
-* Show the Route to the nearest Mensa for a given lat,lon 
-* credit to N Asse for glorious work with this abgabe
+* Shows the route to the next Mensa for a given lat,lon 
+* credit to Nikklars Asse for glorious work with this abgabe
 */
 function navToMensa(lat,lon){
     var Mensen

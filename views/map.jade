@@ -2,12 +2,6 @@ extends layout
 
 block content
   .container-fluid.fill-height
-    .row.toolbar
-      .col-xs-12.col-sm-8.small
-        button#delete.btn.btn-success.btn-xs(disabled='disabled')
-          span.glyphicon.glyphicon-remove-circle()
-          span
-          | Entferne GeoJSON-Schicht
     .row
       #resizable.col-xs-12.col-sm-8
         #accordionMap
@@ -20,6 +14,7 @@ block content
                   .card-body          
                     .panel-body
                       #map
+          // /Karte            
           panel
             .panel-heading.panel-default
               a.panel-title(data-toggle='collapse', href='#collapseExample')
@@ -57,146 +52,241 @@ block content
                         |}
                       h4(style='color:white;') Link
                       pre https://raw.githubusercontent.com/yhallowiegeht/GeosoftAbgabe/master/JSON/GEO1jens.json
+          // /Beispieldaten
+        // /Akkordeon              
       #mirror.col-xs-12.col-sm-4
         #accordion  
           panel
             .panel-heading.panel-default 
-              a.collapsed.panel-title(data-toggle='collapse', href='#collapseOne')
-                | Neues Institut hinzufügen
+              a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseOne')
+                | Institute
               #collapseOne.collapse(data-parent='#accordion')
                 .card
                   .card-body
                     .panel-body
-                      .form-group  
-                        label.badge(for='GeoJSONname') Institutsname
-                        textarea#GeoJSONname.form-control(rows='1', placeholder="Hier Name einfügen")
-                      .btn-group(style='margin-bottom: 5px;')
-                        button.btn.badge#GeoJSON GeoJSON
-                        button.btn.badge(disabled='disabled') |
-                        button.btn.badge#URL URL
-                      br                                          
-                      #GeoJSON-field
-                        .form-group
-                          textarea#geojson-area.form-control(rows='4', placeholder="Hier GeoJSON einfügen", style='margin-bottom: 5px;')
-                          button.btn.badge(onclick='loadGeoJSON()', style='background-color: #777;')
-                            span
-                            | Zeige auf Karte
-                      #URL-field
-                        .form-group
-                          textarea#url-area.form-control(rows='1', placeholder="Hier URL einfügen", style='margin-bottom: 5px;')
-                          button.btn.badge(onclick='loadURL()', style='background-color: #777;')
-                            span
-                            | Zeige auf Karte
-                      .form-group
-                        br
-                        button#download.btn.btn-success.btn(onclick='saveInstToDatabase()', disabled='disabled')
-                          span.glyphicon.glyphicon-save()
-                          span  
-                          | In Datenbank speichern
+                      ul.nav.nav-pills
+                        li
+                          a#greyjoy(data-toggle='tab', href='#InstSave') Hinzufügen
+                        li
+                          a#greyjoy(data-toggle='tab', href='#InstLoad') Laden
+                        li
+                          a#greyjoy(data-toggle='tab', href='#InstUpdate') Bearbeiten
+                        li
+                          a#greyjoy(data-toggle='tab', href='#InstDelete') Löschen
+                      .tab-content
+                        #InstSave.tab-pane.fade.in.active
+                          h3#whitewanderer Neues Institut hinzufügen
+                          .form-group  
+                            label.badge(for='sInstName') Institutsname
+                            textarea#sInstName.form-control(rows='1', placeholder="Hier Name einfügen")
+                          ul.nav.nav-pills
+                            li
+                              a#greyjoy(data-toggle='tab', href='#sGeoJSON') GeoJSON-Text
+                            li
+                              a#greyjoy(data-toggle='tab', href='#sURL') Link mit GeoJSON
+                          .tab-content                                          
+                            #sGeoJSON.tab-pane.fade.in.active
+                              .form-group
+                                textarea#s-geojson-area.form-control(rows='4', placeholder="Hier GeoJSON einfügen", style='margin-bottom: 5px;')
+                                button.btn.badge(onclick='loadGeoJSON()', style='background-color: #777;')
+                                  span
+                                  | Zeige auf Karte
+                            #sURL.tab-pane.fade.in
+                              .form-group
+                                textarea#s-url-area.form-control(rows='1', placeholder="Hier URL einfügen", style='margin-bottom: 5px;')
+                                button.btn.badge(onclick='loadURL()', style='background-color: #777;')
+                                  span
+                                  | Zeige auf Karte
+                          .form-group
+                            button#uploadYessir.btn.btn(onclick='saveINSTtoDB()', disabled='disabled')
+                              span.glyphicon.glyphicon-home()
+                              span  
+                              | In Datenbank speichern                            
+                        #InstLoad.tab-pane.fade.in
+                          h3#whitewanderer Bestehendes Institut laden
+                          .form-group
+                            label.badge(for='InstLoadDbName') Institutsname
+                            textarea#InstLoadDbName.form-control(rows='1', placeholder="Hier Name einfügen")
+                            br
+                            button.btn.btn(onclick='LoadINSTfromDB()')
+                              span.glyphicon.glyphicon-save()
+                              span    Objekt aus Datenbank laden                              
+                        #InstUpdate.tab-pane.fade.in
+                          h3#whitewanderer Bestehendes Institut bearbeiten
+                          .form-group  
+                            label.badge(for='InstUpdateDbName') Institutsname
+                            textarea#InstUpdateDbName.form-control(rows='1', placeholder="Hier Name einfügen")
+                          ul.nav.nav-pills
+                            li
+                              a#greyjoy(data-toggle='tab', href='#uGeoJSON') GeoJSON-Text
+                            li
+                              a#greyjoy(data-toggle='tab', href='#uURL') Link mit GeoJSON
+                          .tab-content                                          
+                            #uGeoJSON.tab-pane.fade.in.active
+                              .form-group
+                                textarea#u-geojson-area.form-control(rows='4', placeholder="Hier GeoJSON einfügen", style='margin-bottom: 5px;')
+                                button.btn.badge(onclick='loadGeoJSON()', style='background-color: #777;')
+                                  span
+                                  | Zeige auf Karte
+                            #uURL.tab-pane.fade.in
+                              .form-group
+                                textarea#u-url-area.form-control(rows='1', placeholder="Hier URL einfügen", style='margin-bottom: 5px;')
+                                button.btn.badge(onclick='loadURL()', style='background-color: #777;')
+                                  span
+                                  | Zeige auf Karte
+                          .form-group
+                            button.btn.btn(onclick='updateINSTinDB()', disabled='disabled')
+                              span.glyphicon.glyphicon-edit()
+                              span  
+                              | In Datenbank speichern                              
+                        #InstDelete.tab-pane.fade.in
+                          h3#whitewanderer Bestehendes Institut löschen
+                          .form-group
+                            label.badge(for='InstDeleteDbName') Institutsname
+                            textarea#InstDeleteDbName.form-control(rows='1', placeholder="Hier Name einfügen")
+                            br
+                            button.btn.btn(onclick='deleteINSTfromDB()')
+                              span.glyphicon.glyphicon-trash()
+                              span    Objekt aus Datenbank löschen
+          // /Institute                                                                     
           panel
             .panel-heading.panel-default
               .card
                 .card-header
                   a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseTwo')
-                    | Neue Fachschaft hinzufügen
+                    | Fachbereiche
                   #collapseTwo.collapse(data-parent='#accordion')
                     .card-body                  
                       panel
                         .panel-body
-                          .form-group
-                            label.badge(for='FSname') Name
-                            form
-                              select#FSname.form-group(name='Fachbereiche')
-                                option(selected='')
-                                option(value='fb1') [FB01] Evangelisch-Theologische Fakultät
-                                option(value='fb2') [FB02] Katholisch-Theologische Fakultät
-                                option(value='fb3') [FB03] Rechtswissenschaftliche Fakultät
-                                option(value='fb4') [FB04] Wirtschaftwissenschaftliche Fakultät
-                                option(value='fb5') [FB05] Medizinische Fakultät
-                                option(value='fb6') [FB06] Erziehungswissenschaft und Sozialwissenschaften
-                                option(value='fb7') [FB07] Psychologie und Sportwissenschaften
-                                option(value='fb8') [FB08] Geschichte/Philosophie
-                                option(value='fb9') [FB09] Philologie
-                                option(value='fb10') [FB10] Mathematik und Informatik
-                                option(value='fb11') [FB11] Physik
-                                option(value='fb12') [FB12] Chemie und Pharmazie
-                                option(value='fb13') [FB13] Biologie
-                                option(value='fb14') [FB14] Geowissenschaften
-                                option(value='fb15') [FB15] Musikhochschule          
-                            label.badge(for='FSurl') Webseite
-                            textarea#FSurl.form-control(rows='1', placeholder='Hier URL einfügen')
-                            br
-                            label.badge(for='institute') Institute
-                            textarea#institute.form-control(rows='1', placeholder='Hier Institute einfügen')
-                            br
-                            button#download2.btn.btn-success.btn(onclick='saveFachToDatabase()')
-                              span.glyphicon.glyphicon-save()
-                              span  In Datenbank speichern  
+                          ul.nav.nav-pills
+                            li
+                              a#greyjoy(data-toggle='tab', href='#FbSave') Hinzufügen
+                            li
+                              a#greyjoy(data-toggle='tab', href='#FbLoad') Laden
+                            li
+                              a#greyjoy(data-toggle='tab', href='#FbUpdate') Bearbeiten
+                            li
+                              a#greyjoy(data-toggle='tab', href='#FbDelete') Löschen
+                          .tab-content
+                            #FbSave.tab-pane.fade.in.active
+                              h3#whitewanderer Neuen Fachbereich hinzufügen
+                              .form-group  
+                                label.badge(for='FbSaveName') Fachbereichsname
+                                textarea#FbSaveName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                label.badge(for='FbSaveAbk') Fachbereichsabkürzung
+                                textarea#FbSaveAbk.form-control(rows='1', placeholder="Hier Abkürzung einfügen")
+                                br          
+                                label.badge(for='FbSaveUrl') Webseite
+                                textarea#FbSaveUrl.form-control(rows='1', placeholder='Hier URL einfügen')
+                                br
+                                label.badge(for='FbSaveInstitute') Institute
+                                textarea#FbSaveInstitute.form-control(rows='1', placeholder='Hier Institute einfügen')
+                                br
+                                button.btn.btn(onclick='saveFBtoDB()')
+                                  span.glyphicon.glyphicon-star()
+                                  span  In Datenbank speichern                            
+                            #FbLoad.tab-pane.fade.in
+                              h3#whitewanderer Bestehenden Fachbereich laden
+                              .form-group
+                                label.badge(for='FbLoadName') Fachbereichsname
+                                textarea#FbLoadName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                button.btn.btn(onclick='loadFBfromDB()')
+                                  span.glyphicon.glyphicon-save()
+                                  span  Objekt aus Datenbank laden
+                                br
+                                br
+                                p#objOut(disabled='disabled', style='color:white') 
+                            #FbUpdate.tab-pane.fade.in
+                              h3#whitewanderer Bestehenden Fachbereich bearbeiten
+                              .form-group  
+                                label.badge(for='FbUpdateName') Fachbereichsname
+                                textarea#FbUpdateName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                label.badge(for='FbUpdateUrl') Webseite
+                                textarea#FbUpdateUrl.form-control(rows='1', placeholder='Hier URL einfügen')
+                                br
+                                label.badge(for='FbUpdateInstitute') Institute
+                                textarea#FbUpdateInstitute.form-control(rows='1', placeholder='Hier Institute einfügen')
+                                br
+                                button.btn.btn(onclick='updateFBinDB()')
+                                  span.glyphicon.glyphicon-edit()
+                                  span  In Datenbank speichern                             
+                            #FbDelete.tab-pane.fade.in
+                              h3#whitewanderer Bestehenden Fachbereich löschen
+                              .form-group
+                                label.badge(for='FbDeleteName') Fachbereichsname
+                                textarea#FbDeleteName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                button.btn.btn(onclick='deleteFBfromDB()')
+                                  span.glyphicon.glyphicon-trash()
+                                  span    Objekt aus Datenbank löschen
+          // /Fachbereiche                        
           panel
             .panel-heading.panel-default
               .card
                 .card-header
                   a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseThree')
-                    | Neue Route hinzufügen
+                    | Routen
                   #collapseThree.collapse(data-parent='#accordion')
                     .card-body                  
                       panel
                         .panel-body
-                          .form-group
-                            label.badge(for='rName') Name
-                            textarea#rName.form-control(rows='1', placeholder="Hier Name einfügen")
-                            br
-                            button#routeLaden.btn.btn-success.btn(onclick='saveRouteToDatabase()')
-                              span.glyphicon.glyphicon-road()
-                              span    Route speichern
-          panel
-            .panel-heading.panel-default
-              .card
-                .card-header
-                  a.collapsed.h2.panel-title(data-toggle='collapse', href='#collapseFour')
-                    | Objekte laden
-                  #collapseFour.collapse.show(data-parent='#accordion')
-                    .card-body                 
-                      panel
-                        .panel-body
-                          .btn-group(style='margin-bottom: 5px;')
-                            button.btn.badge#dbInstitute Institute
-                            button.btn.badge(disabled='disabled') |
-                            button.btn.badge#dbFachbereiche Fachbereiche
-                            button.btn.badge(disabled='disabled') |
-                            button.btn.badge#dbRouten Routen                            
-                          br
-                          #dbInstitute-field
-                            .form-group
-                              textarea#instdbName.form-control(rows='1', placeholder="Hier Name einfügen")
-                              br
-                              button.btn.btn-success.btn(onclick='LoadInstituteFromDataBase()')
-                                span.glyphicon.glyphicon-list-alt()
-                                span    Objekt aus Datenbank laden  
-                          #dbFachbereiche-field
-                            .form-group
-                              textarea#fbdbName.form-control(rows='1', placeholder="Hier Name einfügen")
-                              br
-                              button.btn.btn-success.btn(onclick='LoadFachbereichFromDataBase()')
-                                span.glyphicon.glyphicon-list-alt()
-                                span    Objekt aus Datenbank laden
-                              br
-                              br
-                              p#objOut(disabled='disabled', style='color:white')  
-                          #dbRouten-field
-                            .form-group
-                              textarea#routedbName.form-control(rows='1', placeholder="Hier Name einfügen")
-                              br
-                              button.btn.btn-success.btn(onclick='LoadRoutenFromDataBase()')
-                                span.glyphicon.glyphicon-list-alt()
-                                span    Objekt aus Datenbank laden
-                                                     
+                          ul.nav.nav-pills
+                            li
+                              a#greyjoy(data-toggle='tab', href='#RSave') Hinzufügen
+                            li
+                              a#greyjoy(data-toggle='tab', href='#RLoad') Laden
+                            li
+                              a#greyjoy(data-toggle='tab', href='#RUpdate') Bearbeiten
+                            li
+                              a#greyjoy(data-toggle='tab', href='#RDelete') Löschen
+                          .tab-content
+                            #RSave.tab-pane.fade.in.active
+                              h3#whitewanderer Neue Route hinzufügen
+                              .form-group
+                                label.badge(for='rSaveName') Routenname
+                                textarea#rSaveName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                button.btn.btn(onclick='saveRtoDB()')
+                                  span.glyphicon.glyphicon-road()
+                                  span  Route speichern                          
+                            #RLoad.tab-pane.fade.in
+                              h3#whitewanderer Bestehende Route laden
+                              .form-group
+                                label.badge(for='rLoadName') Routenname
+                                textarea#rLoadName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                button.btn.btn(onclick='loadRfromDB()')
+                                  span.glyphicon.glyphicon-save()
+                                  span  Objekt aus Datenbank laden 
+                            #RUpdate.tab-pane.fade.in
+                              h3#whitewanderer Bestehende Route bearbeiten
+                              .form-group  
+                                label.badge(for='rUpdateName') Routenname
+                                textarea#rUpdateName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                button.btn.btn(onclick='updateRinDB()')
+                                  span.glyphicon.glyphicon-edit()
+                                  span  In Datenbank speichern                             
+                            #RDelete.tab-pane.fade.in
+                              h3#whitewanderer Bestehendes Route löschen
+                              .form-group
+                                label.badge(for='rDeleteName') Fachbereichsname
+                                textarea#rDeleteName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                br
+                                button.btn.btn(onclick='deleteRfromDB()')
+                                  span.glyphicon.glyphicon-trash()
+                                  span  Objekt aus Datenbank löschen
+          // /Routen
+        // /Akkordeon                                                                                                                                 
   // /.container
+  
   script(src='javascripts/resize.js')
   script(src='javascripts/help_functions.js')
   script(src='javascripts/map.js')
   script(src='javascripts/ui_functions.js')
   script(src='javascripts/db_functions.js')
   script(src='javascripts/map_functions.js')
-
-  

@@ -18,7 +18,7 @@ body {
 
 #resizable {
     height: 60rem;
-    border-right: 3px solid #4EAF47;
+    border-right: 3px solid #869248;
     min-width: 36rem !important;
 }
 
@@ -46,3 +46,34 @@ div.toolbar p {
     text-shadow: 0 0 0.5rem #333;
     font-size: 3rem;
 }
+
+#whitewanderer {
+    color: white;
+}
+
+a {
+    color: #727c3d;
+}
+
+a:hover {
+    color: #869248;
+}
+
+a:focus {
+    color: #869248;
+}
+
+.btn {
+    background-color: #727c3d;
+    border-color: white;
+}
+
+.btn:hover {
+    background-color: #869248;
+    border-color: white;
+}
+
+#greyjoy {
+    background-color: #333 ;
+}
+

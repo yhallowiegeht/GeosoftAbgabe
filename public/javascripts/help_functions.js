@@ -8,6 +8,10 @@ function destroyClickedElement(event) {
     document.body.removeChild(event.target);
 }
 
+/*
+ * Simple function to estimate the mean coordinate value
+ * of a polygon like the inputs from institutes 
+ */ 
 function coordinateMean(GeoJSON){
     var tempcoordinates = GeoJSON.features[0].geometry.coordinates[0];
     var coordinatesLAT = [];
@@ -27,7 +31,9 @@ function coordinateMean(GeoJSON){
     var LATLONmean = {LATmean, LONmean};
     return LATLONmean;
 }
-
+/*
+ * Function to get the time
+ */ 
 function getCurrentTime(){
     var date = new Date();
     date.setHours(date.getHours() + 2);
@@ -41,6 +47,9 @@ function getCurrentTime(){
     linkDate = year+"-"+month+"-"+day;
 }
 
+/*
+ * Error-handler
+ */ 
 function handleErrors(response) {
     if (!response.ok) {
         throw Error(response.statusText);
@@ -63,8 +72,10 @@ $('#delete').click(function() {
         alert("Nix zu loeschn");
     }
 })
-
-//- Credit to https://stackoverflow.com/users/1090562/salvador-dali
+/*
+ * distance function from first assignment
+ * Credit to https://stackoverflow.com/users/1090562/salvador-dali
+ */ 
 function distance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;    // Math.PI / 180
     var c = Math.cos;

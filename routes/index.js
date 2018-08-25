@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-//Logging für den Server
-var JL = require('jsnlog').JL;
-//Logging für die Konsole
-var jsnlog_nodejs = require('jsnlog-nodejs').jsnlog_nodejs;
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Geosoftware I - Endabgabe - db' });
@@ -27,16 +22,27 @@ router.get('/database', function(req, res) {
   });
 });
 
+router.get('/:name', function(req, res) {
+  var db = req.db;
+  var collection = db.get('institutes');
+  collection.find({"name": req.params.name},{},function(e,docs){
+    var baba = JSON.parse(docs[0].json);
+    JL().info(baba.features[0].features[0].properties.name);
+    res.render('object', {title: 'Objekt: ' + JSON.stringify(baba.features[0].features[0].properties.name), text: JSON.stringify(docs[0].json), dbName:JSON.stringify(docs[0].name)});
+  JL().info("Currently retrieving object with id... "+req.params.id+ "...");  
+  }); 
+})
+
 /* GET impressum page. */
 router.get('/impressum', function(req, res, next) {
   res.render('impressum', { title: 'Geosoftware I - Endabgabe - Impressum' });
 });
 
 /*
-* handling database insert post request when clicking button in map
-* sending the data of the request to the respective database collections
+* handling database post request when clicking button in map
+* sending the data of the request to the respective database collection
 */
-router.post('/db/institutes/', function(req, res) {
+router.post('/db/institutes', function(req, res) {
   var db = req.db;
   var document = req.body;
   if (document.type == 'institute') {
@@ -50,7 +56,7 @@ router.post('/db/institutes/', function(req, res) {
     });
   }
 })
-.post('/db/routes/', function(req, res) {
+.post('/routes/', function(req, res) {
   var db = req.db;
   var document = req.body;
   if (document.type == 'route') {
@@ -64,7 +70,7 @@ router.post('/db/institutes/', function(req, res) {
     });
   }
 })
-.post('/db/fachbereiche/', function(req, res) {
+.post('/fachbereiche/', function(req, res) {
   var db = req.db;
   var document = req.body;
   if (document.type == 'fachbereich'){
@@ -79,64 +85,54 @@ router.post('/db/institutes/', function(req, res) {
   }
 });
 /*
-* handling database insert post request when clicking button in map
-* sending the data of the request to the respective database collections
+* handling database get request when clicking button in map
+* loading the data from the respective database collection
 */
-router.get('/db/institutes/:name', function(req, res) {
+router.get('/institutes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
   collection.find({name: req.params.name},{},function(e,docs){
         res.send(docs);
     })
   })
-.get('/db/fachbereiche/:name', function(req, res) {
+.get('/fachbereiche/:name', function(req, res) {
   var db = req.db
   var collection2 = db.get('fachbereiche');
   collection2.find({name: req.params.name},{},function(e,docs){
         res.send(docs);
     })
   })
-.get('/db/routes/:name', function(req, res) {
+.get('/routes/:name', function(req, res) {
   var db = req.db  
   var collection3 = db.get('routes');
   collection3.find({name: req.params.name},{},function(e,docs){
           res.send(docs);
     })
-  })
-.get('/:name', function(req, res) {
-  var db = req.db;
-  var collection = db.get('institutes');
-  collection.find({"name": req.params.name},{},function(e,docs){
-    var baba = JSON.parse(docs[0].json);
-    JL().info(baba.features[0].features[0].properties.name);
-    res.render('object', {title: 'Objekt: ' + JSON.stringify(baba.features[0].features[0].properties.name), text: JSON.stringify(docs[0].json), dbName:JSON.stringify(docs[0].name)});
-  JL().info("Currently retrieving object with id... "+req.params.id+ "...");  
-  }); 
-});
+  });
 
 /*
 * handling database update request when clicking button in map
 */
-router.put('/db/institutes/:name', function(req, res) {
+router.put('/institutes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
-  collection.update({name: req.params.name},{ $set: object },
+  collection.update({name: req.params.name},{name: req.body.name, json: req.body.json},
     function(e,docs){
       res.send(docs)
   });
 })
-.put('/db/fachbereiche/:name', function(req, res) {
+.put('/fachbereiche/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('fachbereiche');
-  collection.update({name: req.params.name},{ $set: object },
+  collection.update({name: req.params.name},{name: req.body.name, abk: req.body.abk, site: req.body.site, inst: req.body.inst},
     function(e,docs){
       res.send(docs)
   });
 })
-.put('/db/routes/:name', function(req, res) {
+.put('/routes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('routes');
-  collection.update({name: req.params.name},{ $set: object },
+  collection.update({name: req.params.name},{name: req.body.name, start: req.body.start, ziel: req.body.ziel},
     function(e,docs){
       res.send(docs)
   });
@@ -145,31 +141,26 @@ router.put('/db/institutes/:name', function(req, res) {
 /*
 * handling database delete request when clicking button in map
 */
-router.delete('/db/institutes/:name', function(req, res) {
+router.delete('/institutes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('institutes');
   collection.remove({name: req.params.name},function(e,docs){
       res.send(docs)
   });
 })
-.delete('/db/fachbereiche/:name', function(req, res) {
+.delete('/fachbereiche/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('fachbereiche');
   collection.remove({name: req.params.name},function(e,docs){
       res.send(docs)
   });
 })
-.delete('/db/routes/:name', function(req, res) {
+.delete('/routes/:name', function(req, res) {
   var db = req.db;
   var collection = db.get('routes');
   collection.remove({name: req.params.name},function(e,docs){
       res.send(docs)
   });
-});
-
-// jsnlog.js on the client by default sends log messages to /jsnlog.logger, using POST.
-router.post('*.logger', function (req, res) {
-  jsnlog_nodejs(JL, req.body);
 });
 
 module.exports = router;

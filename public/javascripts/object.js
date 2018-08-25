@@ -25,7 +25,3 @@ function loadGeomitriesOfObject() {
   var marker = L.geoJSON(geojson.features[1]).addTo(map).bindPopup("<h5>"+iname+"<h5><img src="+bild+" width='200'><br>").openPopup();
   map.fitBounds(layer.getBounds());
 }
-
-// var name = document.getElementById('fbdbName').value;
-// var num = name.replace( /^\D+/g, '');
-// var FSname = document.getElementById("FSname")[num].innerHTML;
