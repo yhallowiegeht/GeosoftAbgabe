@@ -8,7 +8,7 @@ var monk = require('monk');
 var db = monk('localhost:27017/lageplan'); 
 
 var indexRouter = require('./routes/index');
-var databaseRouter = require('./routes/db');
+//var databaseRouter = require('./routes/db');
 
 var app = express();
 
@@ -32,7 +32,7 @@ app.use(function(req,res,next){
   next();
 });
 
-app.use('/db', databaseRouter);
+//app.use('/db', databaseRouter);
 app.use('/', indexRouter);
 
 
