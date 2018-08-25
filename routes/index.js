@@ -56,7 +56,7 @@ router.post('/db/institutes', function(req, res) {
     });
   }
 })
-.post('/routes/', function(req, res) {
+.post('/db/routes/', function(req, res) {
   var db = req.db;
   var document = req.body;
   if (document.type == 'route') {
