@@ -61,15 +61,16 @@ function handleErrors(response) {
 * @desc Deletes the layer 
 * source: https://bl.ocks.org/danswick/d30c44b081be31aea483
 */
-$('#delete').click(function() {
+$('#deleteLayer').click(function() {
     try {
         drawnItems.clearLayers();        
-        $('#delete').prop('disabled', true);
+        $('#deleteLayer').prop('disabled', true);
         $('#download').prop('disabled', true);
-        alert("Allet geloescht");
+
+        alert("Alles geloescht!");
     }
     catch (err) {
-        alert("Nix zu loeschn");
+        alert("Nix zu loeschen!");
     }
 })
 /*

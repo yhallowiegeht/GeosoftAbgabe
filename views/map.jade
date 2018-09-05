@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  .container-fluid.fill-height
+  .container-fluid.fill-height  
     .row
       #resizable.col-xs-12.col-sm-8
         #accordionMap
@@ -13,6 +13,10 @@ block content
                 .card
                   .card-body          
                     .panel-body
+                      button#deleteLayer.btn.btn-success(disabled='disabled')
+                        span.glyphicon.glyphicon-remove-circle()
+                        span
+                        | Entferne GeoJSON-Schicht
                       #map
           // /Karte            
           panel
@@ -68,9 +72,7 @@ block content
                         li
                           a#greyjoy(data-toggle='tab', href='#InstSave') Hinzufügen
                         li
-                          a#greyjoy(data-toggle='tab', href='#InstLoad') Laden
-                        li
-                          a#greyjoy(data-toggle='tab', href='#InstUpdate') Bearbeiten
+                          a#greyjoy(data-toggle='tab', href='#InstLoad') Laden/Bearbeiten
                         li
                           a#greyjoy(data-toggle='tab', href='#InstDelete') Löschen
                       .tab-content
@@ -81,64 +83,50 @@ block content
                             textarea#sInstName.form-control(rows='1', placeholder="Hier Name einfügen")
                           ul.nav.nav-pills
                             li
-                              a#greyjoy(data-toggle='tab', href='#sGeoJSON') GeoJSON-Text
+                              a#greyjoy(data-toggle='tab', href='#sGeoJSON', '') GeoJSON-Text
                             li
-                              a#greyjoy(data-toggle='tab', href='#sURL') Link mit GeoJSON
+                              a#greyjoy(data-toggle='tab', href='#sURL', '') Link mit GeoJSON
                           .tab-content                                          
                             #sGeoJSON.tab-pane.fade.in.active
                               .form-group
                                 textarea#s-geojson-area.form-control(rows='4', placeholder="Hier GeoJSON einfügen", style='margin-bottom: 5px;')
-                                button.btn.badge(onclick='loadGeoJSON()', style='background-color: #777;')
+                                button.btn.badge(onclick='loadGeoJSON("#s-geojson-area", "#s-upload")', style='background-color: #777;')
                                   span
                                   | Zeige auf Karte
                             #sURL.tab-pane.fade.in
                               .form-group
                                 textarea#s-url-area.form-control(rows='1', placeholder="Hier URL einfügen", style='margin-bottom: 5px;')
-                                button.btn.badge(onclick='loadURL()', style='background-color: #777;')
+                                button.btn.badge(onclick='loadURL("s-url-area", "#s-upload")', style='background-color: #777;')
                                   span
                                   | Zeige auf Karte
                           .form-group
-                            button#uploadYessir.btn.btn(onclick='saveINSTtoDB()', disabled='disabled')
+                            button#s-upload.btn.btn(onclick='saveINSTtoDB()', disabled='disabled')
                               span.glyphicon.glyphicon-home()
                               span  
                               | In Datenbank speichern                            
                         #InstLoad.tab-pane.fade.in
-                          h3#whitewanderer Bestehendes Institut laden
+                          h3#whitewanderer Bestehendes Institut laden/bearbeiten
                           .form-group
-                            label.badge(for='InstLoadDbName') Institutsname
+                            label.badge(for='InstLoadDbName') Name in Datenbank
                             textarea#InstLoadDbName.form-control(rows='1', placeholder="Hier Name einfügen")
                             br
                             button.btn.btn(onclick='LoadINSTfromDB()')
                               span.glyphicon.glyphicon-save()
                               span    Objekt aus Datenbank laden                              
-                        #InstUpdate.tab-pane.fade.in
-                          h3#whitewanderer Bestehendes Institut bearbeiten
                           .form-group  
                             label.badge(for='InstUpdateDbName') Institutsname
-                            textarea#InstUpdateDbName.form-control(rows='1', placeholder="Hier Name einfügen")
-                          ul.nav.nav-pills
-                            li
-                              a#greyjoy(data-toggle='tab', href='#uGeoJSON') GeoJSON-Text
-                            li
-                              a#greyjoy(data-toggle='tab', href='#uURL') Link mit GeoJSON
-                          .tab-content                                          
-                            #uGeoJSON.tab-pane.fade.in.active
-                              .form-group
-                                textarea#u-geojson-area.form-control(rows='4', placeholder="Hier GeoJSON einfügen", style='margin-bottom: 5px;')
-                                button.btn.badge(onclick='loadGeoJSON()', style='background-color: #777;')
-                                  span
-                                  | Zeige auf Karte
-                            #uURL.tab-pane.fade.in
-                              .form-group
-                                textarea#u-url-area.form-control(rows='1', placeholder="Hier URL einfügen", style='margin-bottom: 5px;')
-                                button.btn.badge(onclick='loadURL()', style='background-color: #777;')
-                                  span
-                                  | Zeige auf Karte
+                            textarea#InstUpdateDbName.form-control(rows='1', placeholder="Hier Name einfügen")                                         
                           .form-group
-                            button.btn.btn(onclick='updateINSTinDB()', disabled='disabled')
+                            label.badge(for='u-geojson-area') GeoJSON
+                            textarea#u-geojson-area.form-control(rows='4', placeholder="Hier GeoJSON einfügen", style='margin-bottom: 5px;')
+                            button#u-geojson-upload.btn.badge(onclick='loadGeoJSON("#u-geojson-area","#u-upload")', style='background-color: #777;')
+                              span
+                              | Zeige auf Karte
+                          .form-group
+                            button#u-upload.btn.btn(onclick='updateINSTinDB()', disabled='disabled')
                               span.glyphicon.glyphicon-edit()
                               span  
-                              | In Datenbank speichern                              
+                              | In Datenbank updaten                              
                         #InstDelete.tab-pane.fade.in
                           h3#whitewanderer Bestehendes Institut löschen
                           .form-group
@@ -163,9 +151,7 @@ block content
                             li
                               a#greyjoy(data-toggle='tab', href='#FbSave') Hinzufügen
                             li
-                              a#greyjoy(data-toggle='tab', href='#FbLoad') Laden
-                            li
-                              a#greyjoy(data-toggle='tab', href='#FbUpdate') Bearbeiten
+                              a#greyjoy(data-toggle='tab', href='#FbLoad') Laden/Bearbeiten
                             li
                               a#greyjoy(data-toggle='tab', href='#FbDelete') Löschen
                           .tab-content
@@ -188,9 +174,9 @@ block content
                                   span.glyphicon.glyphicon-star()
                                   span  In Datenbank speichern                            
                             #FbLoad.tab-pane.fade.in
-                              h3#whitewanderer Bestehenden Fachbereich laden
+                              h3#whitewanderer Bestehenden Fachbereich laden/bearbeiten
                               .form-group
-                                label.badge(for='FbLoadName') Fachbereichsname
+                                label.badge(for='FbLoadName') Name oder Abkuerzung in Datenbank
                                 textarea#FbLoadName.form-control(rows='1', placeholder="Hier Name einfügen")
                                 br
                                 button.btn.btn(onclick='loadFBfromDB()')
@@ -198,22 +184,22 @@ block content
                                   span  Objekt aus Datenbank laden
                                 br
                                 br
-                                p#objOut(disabled='disabled', style='color:white') 
-                            #FbUpdate.tab-pane.fade.in
-                              h3#whitewanderer Bestehenden Fachbereich bearbeiten
-                              .form-group  
-                                label.badge(for='FbUpdateName') Fachbereichsname
-                                textarea#FbUpdateName.form-control(rows='1', placeholder="Hier Name einfügen")
-                                br
-                                label.badge(for='FbUpdateUrl') Webseite
-                                textarea#FbUpdateUrl.form-control(rows='1', placeholder='Hier URL einfügen')
-                                br
-                                label.badge(for='FbUpdateInstitute') Institute
-                                textarea#FbUpdateInstitute.form-control(rows='1', placeholder='Hier Institute einfügen')
-                                br
-                                button.btn.btn(onclick='updateFBinDB()')
-                                  span.glyphicon.glyphicon-edit()
-                                  span  In Datenbank speichern                             
+                                .form-group  
+                                  label.badge(for='FbUpdateName') Fachbereichsname
+                                  textarea#FbUpdateName.form-control(rows='1', placeholder="Hier Name einfügen")
+                                  br
+                                  label.badge(for='FbUpdateAbk') Fachbereichsabkürzung
+                                  textarea#FbUpdateAbk.form-control(rows='1', placeholder="Hier Abkürzung einfügen")
+                                  br                                      
+                                  label.badge(for='FbUpdateUrl') Webseite
+                                  textarea#FbUpdateUrl.form-control(rows='1', placeholder='Hier URL einfügen')
+                                  br
+                                  label.badge(for='FbUpdateInstitute') Institute
+                                  textarea#FbUpdateInstitute.form-control(rows='1', placeholder='Hier Institute einfügen')
+                                  br
+                                  button.btn.btn(onclick='updateFBinDB()')
+                                    span.glyphicon.glyphicon-edit()
+                                    span  In Datenbank bearbeiten                             
                             #FbDelete.tab-pane.fade.in
                               h3#whitewanderer Bestehenden Fachbereich löschen
                               .form-group
@@ -238,9 +224,7 @@ block content
                             li
                               a#greyjoy(data-toggle='tab', href='#RSave') Hinzufügen
                             li
-                              a#greyjoy(data-toggle='tab', href='#RLoad') Laden
-                            li
-                              a#greyjoy(data-toggle='tab', href='#RUpdate') Bearbeiten
+                              a#greyjoy(data-toggle='tab', href='#RLoad') Laden/Bearbeiten
                             li
                               a#greyjoy(data-toggle='tab', href='#RDelete') Löschen
                           .tab-content
@@ -254,25 +238,23 @@ block content
                                   span.glyphicon.glyphicon-road()
                                   span  Route speichern                          
                             #RLoad.tab-pane.fade.in
-                              h3#whitewanderer Bestehende Route laden
+                              h3#whitewanderer Bestehende Route laden/bearbeiten
                               .form-group
-                                label.badge(for='rLoadName') Routenname
+                                label.badge(for='rLoadName') Name in Datenbank
                                 textarea#rLoadName.form-control(rows='1', placeholder="Hier Name einfügen")
                                 br
                                 button.btn.btn(onclick='loadRfromDB()')
                                   span.glyphicon.glyphicon-save()
                                   span  Objekt aus Datenbank laden 
-                            #RUpdate.tab-pane.fade.in
-                              h3#whitewanderer Bestehende Route bearbeiten
                               .form-group  
                                 label.badge(for='rUpdateName') Routenname
                                 textarea#rUpdateName.form-control(rows='1', placeholder="Hier Name einfügen")
                                 br
                                 button.btn.btn(onclick='updateRinDB()')
                                   span.glyphicon.glyphicon-edit()
-                                  span  In Datenbank speichern                             
+                                  span  Objekt in Datenbank bearbeiten                             
                             #RDelete.tab-pane.fade.in
-                              h3#whitewanderer Bestehendes Route löschen
+                              h3#whitewanderer Bestehende Route löschen
                               .form-group
                                 label.badge(for='rDeleteName') Fachbereichsname
                                 textarea#rDeleteName.form-control(rows='1', placeholder="Hier Name einfügen")
@@ -281,7 +263,7 @@ block content
                                   span.glyphicon.glyphicon-trash()
                                   span  Objekt aus Datenbank löschen
           // /Routen
-        // /Akkordeon                                                                                                                                 
+        // /Akkordeon                                                                                                                                     
   // /.container
   
   script(src='javascripts/resize.js')
